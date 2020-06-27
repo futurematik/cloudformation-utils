@@ -1,0 +1,28 @@
+{
+  "name": "@cfnutil/web",
+  "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
+  "repository": "https://github.com/futurematik/cloudformation-utils",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "dependencies": {
+    "@cfnutil/auto-cert": "^0.1.0",
+    "@cfnutil/core": "^0.1.0",
+    "@cfnutil/empty-bucket": "^0.1.0",
+    "@cfnutil/put-object": "^0.1.0",
+    "@cfnutil/runtime": "^0.1.0",
+    "@cfnutil/unpack-asset": "^0.1.0",
+    "@fmtk/cfntypes": "^0.3.4"
+  }
+}

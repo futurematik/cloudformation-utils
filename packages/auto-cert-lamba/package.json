@@ -1,0 +1,34 @@
+{
+  "name": "@cfnutil/auto-cert-lambda",
+  "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
+  "repository": "https://github.com/futurematik/cloudformation-utils",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
+    "bundle": "cfn-asset rollup",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "files": [
+    "lib/*",
+    "dist/*"
+  ],
+  "devDependencies": {
+    "@cfnutil/assets": "^0.1.0",
+    "@cfnutil/runtime": "^0.1.0",
+    "@fmtk/validation": "^3.5.3",
+    "aws-sdk": "^2.697.0"
+  },
+  "bundle": {
+    "path": "dist/bundle.zip",
+    "hash": "06ca0fe7e17bcbe69e42db5e49b7fe502da5d78a"
+  }
+}

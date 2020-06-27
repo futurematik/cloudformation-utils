@@ -1,0 +1,34 @@
+{
+  "name": "@cfnutil/empty-bucket-lambda",
+  "version": "0.1.0",
+  "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
+  "repository": "https://github.com/futurematik/cloudformation-utils",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
+    "bundle": "cfn-asset rollup",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "files": [
+    "lib/*",
+    "dist/*"
+  ],
+  "devDependencies": {
+    "@cfnutil/assets": "^0.1.0",
+    "@cfnutil/runtime": "^0.1.0",
+    "@fmtk/validation": "^3.5.3",
+    "aws-sdk": "^2.697.0"
+  },
+  "bundle": {
+    "path": "dist/bundle.zip",
+    "hash": "96b1db78c8a6c8bb44bb428d0f48719428066b3c"
+  }
+}

@@ -1,0 +1,15 @@
+export enum LambdaRuntime {
+  DotNetCore_2_1 = 'dotnetcore2.1',
+  DotNetCore_3_1 = 'dotnetcore3.1',
+  Go_1 = 'go1.x',
+  Java_11 = 'java11',
+  Java_8 = 'java8',
+  NodeJs_10 = 'nodejs10.x',
+  NodeJs_12 = 'nodejs12.x',
+  Python_2_7 = 'python2.7',
+  Python_3_6 = 'python3.6',
+  Python_3_7 = 'python3.7',
+  Python_3_8 = 'python3.8',
+  Ruby_2_5 = 'ruby2.5',
+  Ruby_2_7 = 'ruby2.7',
+}

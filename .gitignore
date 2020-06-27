@@ -1,0 +1,11 @@
+node_modules/
+*.log
+dist/
+build/
+.local/
+lib/
+dist/
+*.generated.*
+tsconfig.build.json
+*.tsbuildinfo
+.DS_Store

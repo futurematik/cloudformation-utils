@@ -1,0 +1,24 @@
+{
+  "name": "@cfnutil/empty-bucket",
+  "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
+  "repository": "https://github.com/futurematik/cloudformation-utils",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "dependencies": {
+    "@cfnutil/core": "^0.1.0",
+    "@cfnutil/empty-bucket-lambda": "^0.1.0",
+    "@fmtk/cfntypes": "^0.3.4"
+  }
+}
