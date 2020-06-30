@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint",
@@ -17,8 +17,8 @@
     "watch:compile": "node ../../tscWatch.js"
   },
   "dependencies": {
-    "@cfnutil/core": "^0.1.0",
-    "@cfnutil/auto-cert-lambda": "^0.1.0",
+    "@cfnutil/auto-cert-lambda": "^0.2.0",
+    "@cfnutil/core": "^0.2.0",
     "@fmtk/cfntypes": "^0.3.4"
   }
 }

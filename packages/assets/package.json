@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/assets",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,

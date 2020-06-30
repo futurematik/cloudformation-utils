@@ -1,12 +1,12 @@
 {
   "name": "@cfnutil-test/deploy-cra-test",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@cfnutil-test/deploy-cra-test": "^0.1.0",
-    "@cfnutil/assets": "^0.1.0",
-    "@cfnutil/core": "^0.1.0",
-    "@cfnutil/web": "^0.1.0",
+    "@cfnutil-test/deploy-cra-test": "^0.2.0",
+    "@cfnutil/assets": "^0.2.0",
+    "@cfnutil/core": "^0.2.0",
+    "@cfnutil/web": "^0.2.0",
     "@fmtk/validation": "^3.5.3",
     "chalk": "^4.1.0",
     "commander": "^5.1.0",
