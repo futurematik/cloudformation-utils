@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/empty-bucket-lambda",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,
@@ -23,12 +23,12 @@
   ],
   "devDependencies": {
     "@cfnutil/assets": "^0.2.0",
-    "@cfnutil/runtime": "^0.2.0",
+    "@cfnutil/runtime": "^0.2.1",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.697.0"
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "7e4ae60bb5a4f5ce8e3ea4ea68643e6bce70eee7"
+    "hash": "0d75756147c4e6dba5031e5a0f0acb903ceb2391"
   }
 }

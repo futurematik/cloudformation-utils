@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil-test/cra-test",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -42,6 +42,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "e4fbc787d77acf2a04ff05ef8cc79612ee6861a2"
+    "hash": "83e22e89fe62dd86e9a101f1c69f18776413e4b7"
   }
 }
