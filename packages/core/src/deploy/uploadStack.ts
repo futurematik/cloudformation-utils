@@ -4,8 +4,17 @@ import S3 from 'aws-sdk/clients/s3';
 import { assertValid, ValidationMode, ExtraFieldsMode } from '@fmtk/validation';
 import { validateAssetManifest } from './AssetManifest';
 
+export type UploadProgress =
+  | {
+      bytesUp: number;
+      done?: false;
+      file: string;
+      total: number;
+    }
+  | { done: true };
+
 export interface UploadProgressReporter {
-  (file: string, bytesUp: number, totalBytes: number): void;
+  (progress: UploadProgress): void;
 }
 
 export async function uploadStack(
@@ -34,6 +43,9 @@ export async function uploadStack(
       uploadFile(path.resolve(manifestDir, x), bucket, s3, report),
     ),
   ]);
+  if (report) {
+    report({ done: true });
+  }
 }
 
 async function uploadFile(
@@ -46,7 +58,7 @@ async function uploadFile(
   const stat = await fs.promises.stat(localPath);
 
   if (report) {
-    report(filename, 0, stat.size);
+    report({ file: filename, bytesUp: 0, total: stat.size });
   }
 
   const result = s3.upload({
@@ -57,7 +69,7 @@ async function uploadFile(
 
   if (report) {
     result.on('httpUploadProgress', (progress) => {
-      report(filename, progress.loaded, stat.size);
+      report({ file: filename, bytesUp: progress.loaded, total: stat.size });
     });
   }
 

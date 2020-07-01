@@ -1,20 +1,13 @@
 import { run } from '@cfnutil/assets';
-import { runCommands } from './util/Command';
-import { buildCommand } from './commands/build';
-import { uploadCommand } from './commands/upload';
-import { changesetCommand } from './commands/changeset';
-import { executeCommand } from './commands/execute';
-import { deployCommand } from './commands/deploy';
+import { makeCli } from '@cfnutil/core';
+import { makeStack } from './makeStack';
 
 async function main(args: string[]) {
-  return await runCommands(
-    args,
-    buildCommand,
-    changesetCommand,
-    deployCommand,
-    executeCommand,
-    uploadCommand,
-  );
+  const program = makeCli({
+    defaultStackName: 'CfnUtilCRATestStack',
+    builder: makeStack,
+  });
+  await program.parseAsync(args, { from: 'user' });
 }
 
 run(main);

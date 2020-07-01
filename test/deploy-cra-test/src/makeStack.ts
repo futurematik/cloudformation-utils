@@ -2,6 +2,7 @@ import {
   makeAssetFromPackage,
   makeTemplateBuilder,
   TemplateBuilder,
+  makeParameters,
 } from '@cfnutil/core';
 import { makeReactAppFactory } from '@cfnutil/web';
 import { makeAutoCertResource } from '@cfnutil/auto-cert';
@@ -9,12 +10,7 @@ import { makeEmptyBucketResource } from '@cfnutil/empty-bucket';
 import { makePutObjectResource } from '@cfnutil/put-object';
 import { makeUnpackAssetResource } from '@cfnutil/unpack-asset';
 
-export interface StackProps {
-  DomainName: string;
-  HostedZoneId: string;
-}
-
-export function makeStack(name: string, props: StackProps): TemplateBuilder {
+export function makeStack(name: string): TemplateBuilder {
   const [autoCertBuilder, autoCert] = makeAutoCertResource(
     `${name}AutoCertResource`,
   );
@@ -27,6 +23,11 @@ export function makeStack(name: string, props: StackProps): TemplateBuilder {
   const [unpackAssetBuilder, unpackAsset] = makeUnpackAssetResource(
     `${name}UnpackAssetResource`,
   );
+
+  const [paramsBuilder, params] = makeParameters({
+    DomainName: 'String',
+    HostedZoneId: 'String',
+  });
 
   const reactApp = makeReactAppFactory({
     autoCert,
@@ -42,7 +43,8 @@ export function makeStack(name: string, props: StackProps): TemplateBuilder {
   );
 
   const [appBuilder] = reactApp.makeResource(`${name}App`, {
-    ...props,
+    DomainName: params.DomainName.ref,
+    HostedZoneId: params.HostedZoneId.ref,
     Source: appAsset.ref,
     Config: {
       Contents: `window.env={"greeting":"hello, world"}`,
@@ -55,6 +57,7 @@ export function makeStack(name: string, props: StackProps): TemplateBuilder {
     emptyBucketBuilder,
     putObjectBuilder,
     unpackAssetBuilder,
+    paramsBuilder,
     appAssetBuilder,
     appBuilder,
   ]);

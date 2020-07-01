@@ -61,7 +61,7 @@ export async function executeChangeSet(
         status += '_' + action;
       }
       if (conditional) {
-        status += '?';
+        status += '*';
       }
 
       reporter({

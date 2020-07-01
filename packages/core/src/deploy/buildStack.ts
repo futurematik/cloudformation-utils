@@ -13,10 +13,25 @@ export interface StagingOptions {
   version?: string;
 }
 
+export interface BuildStackReporterItem {
+  asset?: {
+    path: string;
+    size: number;
+  };
+  current?: string;
+  done?: boolean;
+  total?: number;
+}
+
+export interface BuildStackReporter {
+  (item: BuildStackReporterItem): void;
+}
+
 export async function buildStack(
   name: string,
   builder: TemplateBuilder,
   options: StagingOptions,
+  reporter?: BuildStackReporter,
 ): Promise<string> {
   await fs.promises.mkdir(options.outputDir, { recursive: true });
   const templateItems = builder.build();
@@ -41,7 +56,14 @@ export async function buildStack(
     template: templateName,
   };
 
+  if (reporter) {
+    reporter({ total: templateItems.length + 2 });
+  }
+
   for (const item of templateItems) {
+    if (reporter) {
+      reporter({ current: item.name });
+    }
     switch (item.type) {
       case TemplateItemType.Asset:
         try {
@@ -49,11 +71,24 @@ export async function buildStack(
             bucket: item.definition.bucketParameterName,
             object: item.definition.objectParameterName,
           };
-          manifest.assets[item.name] = await stageAsset(
+          const assetPath = await stageAsset(
             item.name,
             item.definition,
             options,
           );
+          manifest.assets[item.name] = assetPath;
+
+          if (reporter) {
+            const assetFullPath = path.join(options.outputDir, assetPath);
+
+            reporter({
+              current: item.name,
+              asset: {
+                path: path.relative(process.cwd(), assetFullPath),
+                size: (await fs.promises.stat(assetFullPath)).size,
+              },
+            });
+          }
         } catch (err) {
           console.error(`asset ${item.name}:`, err);
           throw err;
@@ -73,15 +108,32 @@ export async function buildStack(
     }
   }
 
-  await fs.promises.writeFile(
-    path.join(options.outputDir, templateName),
-    JSON.stringify(template, null, 2),
-  );
+  const templatePath = path.join(options.outputDir, templateName);
+  await fs.promises.writeFile(templatePath, JSON.stringify(template, null, 2));
+
+  if (reporter) {
+    reporter({
+      current: templateName,
+      asset: {
+        path: path.relative(process.cwd(), templatePath),
+        size: (await fs.promises.stat(templatePath)).size,
+      },
+    });
+  }
 
   const manifestPath = path.join(options.outputDir, manifestName);
-
   await fs.promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
+  if (reporter) {
+    reporter({
+      current: manifestName,
+      asset: {
+        path: path.relative(process.cwd(), manifestPath),
+        size: (await fs.promises.stat(manifestPath)).size,
+      },
+    });
+    reporter({ done: true });
+  }
   return manifestPath;
 }
 

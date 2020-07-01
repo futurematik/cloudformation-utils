@@ -1,9 +1,18 @@
+export * from './cli/build';
+export * from './cli/changeset';
+export * from './cli/deploy';
+export * from './cli/execute';
+export * from './cli/makeCli';
+export * from './cli/setParam';
+export * from './cli/upload';
+
 export * from './deploy/AssetManifest';
 export * from './deploy/buildStack';
 export * from './deploy/createChangeSet';
 export * from './deploy/executeChangeSet';
 export * from './deploy/uploadStack';
 
+export * from './display/makeBuildReporter';
 export * from './display/makeUploadReporter';
 export * from './display/makeChangeSetReporter';
 

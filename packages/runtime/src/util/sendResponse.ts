@@ -7,7 +7,7 @@ export async function sendResponse(
   response: CloudFormationCustomResourceResponse,
 ): Promise<IncomingMessage> {
   return await new Promise<IncomingMessage>((resolve, reject) => {
-    var body = Buffer.from(JSON.stringify(response));
+    const body = Buffer.from(JSON.stringify(response));
 
     const req = https.request(
       url,

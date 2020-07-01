@@ -8,6 +8,8 @@
     "clean": "lerna run clean",
     "compile": "FORCE_COLOR=1 lerna run compile --stream",
     "lint": "FORCE_COLOR=1 lerna run --parallel lint",
+    "postversion": "git push --follow-tags",
+    "preversion": "yarn build",
     "watch:compile": "FORCE_COLOR=1 lerna run --parallel watch:compile"
   },
   "workspaces": {

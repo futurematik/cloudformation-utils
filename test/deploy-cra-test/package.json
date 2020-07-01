@@ -5,7 +5,11 @@
   "dependencies": {
     "@cfnutil-test/cra-test": "^0.2.0",
     "@cfnutil/assets": "^0.2.0",
+    "@cfnutil/auto-cert": "^0.2.0",
     "@cfnutil/core": "^0.2.0",
+    "@cfnutil/empty-bucket": "^0.2.0",
+    "@cfnutil/put-object": "^0.2.0",
+    "@cfnutil/unpack-asset": "^0.2.0",
     "@cfnutil/web": "^0.2.0",
     "@fmtk/validation": "^3.5.3",
     "chalk": "^4.1.0",
