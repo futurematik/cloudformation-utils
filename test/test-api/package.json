@@ -1,13 +1,13 @@
 {
   "name": "@cfnutil-test/test-api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "dependencies": {
     "cat-me": "^1.0.3",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.0"
+    "@cfnutil/assets": "^0.2.1"
   },
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
@@ -19,6 +19,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "6a1c2157748cbc096820b55cd9e58e5ebddd4fe0"
+    "hash": "2270861bf6fa651b88d795b4fb072c04200626bf"
   }
 }

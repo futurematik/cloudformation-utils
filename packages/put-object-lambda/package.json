@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/put-object-lambda",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,
@@ -22,7 +22,7 @@
     "dist/*"
   ],
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.0",
+    "@cfnutil/assets": "^0.2.1",
     "@cfnutil/runtime": "^0.2.1",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.697.0",
@@ -30,6 +30,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "30713ab794762d48d60f5239df2d7789cdd5028c"
+    "hash": "dc8c9c5797a9b4e374ce69c6e3e5889b44a36419"
   }
 }

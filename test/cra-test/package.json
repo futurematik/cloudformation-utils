@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil-test/cra-test",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -16,7 +16,7 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.0"
+    "@cfnutil/assets": "^0.2.1"
   },
   "scripts": {
     "build": "react-scripts build && yarn bundle",
@@ -42,6 +42,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "d0a764cb55c09b24c1fc7eb7805cce7febb2eaa1"
+    "hash": "1d5c4a6f02f4038a6566e6222e0dfd87058404fd"
   }
 }
