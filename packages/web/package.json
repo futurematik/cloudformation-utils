@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "lib/index.js",
   "files": [
     "lib/",
@@ -21,12 +21,12 @@
     "watch:compile": "node ../../tscWatch.js"
   },
   "dependencies": {
-    "@cfnutil/auto-cert": "^0.2.3",
-    "@cfnutil/core": "^0.2.3",
-    "@cfnutil/empty-bucket": "^0.2.3",
-    "@cfnutil/put-object": "^0.2.3",
+    "@cfnutil/auto-cert": "^0.2.4",
+    "@cfnutil/core": "^0.2.4",
+    "@cfnutil/empty-bucket": "^0.2.4",
+    "@cfnutil/put-object": "^0.2.4",
     "@cfnutil/runtime": "^0.2.2",
-    "@cfnutil/unpack-asset": "^0.2.3",
+    "@cfnutil/unpack-asset": "^0.2.4",
     "@fmtk/cfntypes": "^0.3.4"
   }
 }
