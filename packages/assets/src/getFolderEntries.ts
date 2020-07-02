@@ -3,11 +3,18 @@ import path from 'path';
 import ignore from 'ignore';
 import { ZipEntry } from './makeZipPackage';
 
-export async function* getFolderEntries(
-  folder: string,
-  ignorePaths?: string[],
-): AsyncIterableIterator<ZipEntry> {
-  const work = [path.resolve(folder)];
+export interface FolderEntriesOptions {
+  archivePath?: string;
+  source: string;
+  ignore?: string[];
+}
+
+export async function* getFolderEntries({
+  archivePath: archiveBasePath = '/',
+  source,
+  ignore: ignorePaths,
+}: FolderEntriesOptions): AsyncIterableIterator<ZipEntry> {
+  const work = [path.resolve(source)];
   const ig = ignore().add(ignorePaths || []);
 
   while (work.length) {
@@ -18,7 +25,7 @@ export async function* getFolderEntries(
     for (const entry of entries) {
       const entryPath = path.join(curr, entry.name);
 
-      let archivePath = path.relative(folder, entryPath);
+      let archivePath = path.relative(source, entryPath);
       if (entry.isDirectory()) {
         archivePath += '/';
       }
@@ -30,7 +37,7 @@ export async function* getFolderEntries(
         work.push(entryPath);
       } else if (entry.isFile()) {
         yield {
-          archivePath,
+          archivePath: path.join(archiveBasePath, archivePath),
           content: () => fs.createReadStream(entryPath),
         };
       }

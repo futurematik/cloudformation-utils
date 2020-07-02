@@ -16,7 +16,10 @@ export async function zipDir(
   const fullOutputPath = path.resolve(outputPath);
 
   await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
-  const hash = await makeZipPackage(fullOutputPath, getFolderEntries(dirname));
+  const hash = await makeZipPackage(
+    fullOutputPath,
+    getFolderEntries({ source: dirname }),
+  );
 
   if (opts?.packagePath) {
     const packageFilePath = path.resolve(opts.packagePath, 'package.json');

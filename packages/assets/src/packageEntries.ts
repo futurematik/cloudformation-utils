@@ -1,75 +1,94 @@
 import path from 'path';
+import fs from 'fs';
+import childProc from 'child_process';
+import tempy from 'tempy';
 import { ZipEntry } from './makeZipPackage';
-import { resolvePackageInfo, PackageInfo } from './util/resolvePackageInfo';
 import { getFolderEntries } from './getFolderEntries';
+import { findUpTree } from './util/findUpTree';
 
 export interface PackageEntriesOptions {
-  archiveBasePath?: string;
+  archivePath?: string;
   ignorePaths?: string[];
   packageNames: string[];
   resolveRoot?: string;
 }
 
 export async function* packageEntries({
-  archiveBasePath = 'node_modules',
+  archivePath = 'node_modules',
   ignorePaths,
   packageNames,
   resolveRoot = process.cwd(),
 }: PackageEntriesOptions): AsyncIterableIterator<ZipEntry> {
-  const packages = await resolvePackageInfo(resolveRoot, packageNames, true);
-  const byName = new Map<string, PackageInfo[]>();
-
-  if (!ignorePaths) {
-    ignorePaths = ['node_modules/'];
-  } else {
-    ignorePaths = ['node_modules/', ...ignorePaths];
+  const lockPath = await findUpTree('yarn.lock', resolveRoot);
+  if (!lockPath) {
+    throw new Error(`can't find yarn.lock from ${resolveRoot}`);
   }
 
-  for (const pkg of packages) {
-    const versions = byName.get(pkg.name) || [];
-    if (!versions.find((x) => x.version === pkg.version)) {
-      versions.push(pkg);
+  const pkgFilePath = path.join(resolveRoot, 'package.json');
+  const pkg = JSON.parse(await fs.promises.readFile(pkgFilePath, 'utf-8'));
+
+  const newPackageJson = {
+    name: 'build',
+    private: true,
+    dependencies: {} as Record<string, string>,
+  };
+
+  for (const dep of packageNames) {
+    const version =
+      (pkg.dependencies && pkg.dependencies[dep]) ||
+      (pkg.devDependencies && pkg.devDependencies[dep]);
+
+    if (!version) {
+      throw new Error(`cannot find dependency ${dep} in ${pkgFilePath}`);
     }
-    byName.set(pkg.name, versions);
+
+    newPackageJson.dependencies[dep] = version;
   }
 
-  let error = false;
+  const outDir = tempy.directory();
 
-  for (const [pkg, versions] of byName) {
-    if (versions.length > 1) {
-      error = true;
+  await fs.promises.writeFile(
+    path.join(outDir, 'package.json'),
+    JSON.stringify(newPackageJson),
+  );
 
-      console.error(
-        `package ${pkg} has multiple versions: ${versions
-          .map((x) => x.version)
-          .join(', ')}`,
-      );
-    }
-    if (process.platform !== 'linux' && versions.find((x) => x.native)) {
-      error = true;
+  await fs.promises.copyFile(lockPath, path.join(outDir, 'yarn.lock'));
 
-      console.error(
-        `package ${pkg} is native and current platform is ${process.platform}`,
-      );
-    }
+  let exec = ['yarn', '--frozen-lockfile'];
+
+  if (process.platform !== 'linux') {
+    exec = [
+      'docker',
+      'run',
+      '--rm',
+      '-v',
+      `${outDir}:/app`,
+      '-w',
+      '/app',
+      'node:slim',
+      ...exec,
+    ];
   }
 
-  if (error) {
-    throw new Error(`problems with packages found (see error output)`);
-  }
+  const [cmd, ...args] = exec;
+  const proc = childProc.spawn(cmd, args, {
+    cwd: outDir,
+    stdio: 'inherit',
+  });
 
-  for (const [pkgName, [info]] of byName) {
-    for await (const entry of getFolderEntries(info.path, ignorePaths)) {
-      const archivePath = path.join(
-        archiveBasePath,
-        pkgName,
-        entry.archivePath,
-      );
+  await new Promise((resolve, reject) => {
+    proc.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`npm exited with non-zero error code ${code}`));
+      }
+    });
+  });
 
-      yield {
-        archivePath,
-        content: entry.content,
-      };
-    }
-  }
+  return getFolderEntries({
+    source: outDir,
+    archivePath,
+    ignore: ignorePaths,
+  });
 }
