@@ -3,7 +3,10 @@ import path from 'path';
 import { rollupPackage } from './rollupPackage';
 
 export interface RollupPackageDirOptions {
+  ignorePaths?: string[];
+  installPackages?: string[];
   outputPath?: string;
+  resolveRoot?: string;
   rollupConfigPath?: string;
 }
 
@@ -13,14 +16,42 @@ export async function rollupPackageDir(
 ): Promise<void> {
   const outputPath = opts?.outputPath || 'dist/bundle.zip';
   const fullOutputPath = path.resolve(outputPath);
+  const ignorePaths = opts?.ignorePaths || [];
+  const installPackages = opts?.installPackages || [];
+
+  const ignoreFilePath = path.resolve(dirname, '.assetignore');
+  try {
+    const ignoreRules = (
+      await fs.promises.readFile(ignoreFilePath, 'utf8')
+    ).split('\n');
+
+    ignorePaths.push(...ignoreRules);
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err;
+    }
+  }
 
   const rollupConfigPath = opts?.rollupConfigPath || 'rollup.config.js';
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const rollupConfig = require(path.resolve(dirname, rollupConfigPath)).default;
+  const rollupConfig = require(path.resolve(dirname, rollupConfigPath));
+
+  if (
+    Array.isArray(rollupConfig.external) &&
+    rollupConfig.external.every((x: unknown) => typeof x === 'string')
+  ) {
+    installPackages.push(...rollupConfig.external);
+  }
 
   await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
-  const hash = await rollupPackage(fullOutputPath, rollupConfig);
+  const hash = await rollupPackage(
+    fullOutputPath,
+    rollupConfig.default,
+    installPackages,
+    opts?.resolveRoot || dirname,
+    ignorePaths,
+  );
 
   const pkgPath = path.resolve(dirname, 'package.json');
   const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8'));

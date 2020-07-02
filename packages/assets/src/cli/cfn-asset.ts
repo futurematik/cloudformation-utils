@@ -1,36 +1,68 @@
 import path from 'path';
-import minimist from 'minimist';
+import program from 'commander';
 import { rollupPackageDir } from '../rollupPackageDir';
 import { zipDir } from '../zipDir';
 import { tryStat } from '../util/tryStat';
 
-export async function main(args: string[]): Promise<number | void> {
-  const opts = minimist(args, {
-    alias: {
-      source: 's',
+program.storeOptionsAsProperties(false).passCommandToAction(false);
+
+program
+  .command('content')
+  .description('package the given directory into a zip')
+  .requiredOption(
+    '-s, --source <path>',
+    'the source directory (defaults to CWD)',
+    process.cwd(),
+  )
+  .option('-o, --output-dir <path>', 'the output directory')
+  .action(
+    async (options): Promise<void> => {
+      await zipDir(options.source, {
+        packagePath: await getPackagePath(options.source),
+        outputPath: options.outputPath,
+      });
     },
-  });
+  );
 
-  if (opts._.length !== 1) {
-    usage();
-    return 2;
-  }
+program
+  .command('rollup')
+  .description('bundle the given directory with Rollup')
+  .option(
+    '-i, --install <pkg>',
+    'a package to install (can be specified multiple times)',
+    (value: string, prev: string[]): string[] => prev.concat(value),
+    [],
+  )
+  .option(
+    '-x, --ignore <glob>',
+    'a glob to avoid bundling (can be specified multiple times)',
+    (value: string, prev: string[]): string[] => prev.concat(value),
+    [],
+  )
+  .option(
+    '-r, --resolve-root <path>',
+    'the directory to resolve packages from (defaults to CWD)',
+    process.cwd(),
+  )
+  .requiredOption(
+    '-s, --source <path>',
+    'the source directory (defaults to CWD)',
+    process.cwd(),
+  )
+  .option('-o, --output-dir <path>', 'the output directory')
+  .action(
+    async (options): Promise<void> => {
+      await rollupPackageDir(options.source, {
+        ignorePaths: options.ignore,
+        installPackages: options.install,
+        outputPath: options.outputPath,
+        resolveRoot: options.resolveRoot,
+      });
+    },
+  );
 
-  const source = opts.source || process.cwd();
-
-  switch (opts._[0]) {
-    case 'content':
-      await zipDir(source, { packagePath: await getPackagePath(source) });
-      break;
-
-    case 'rollup':
-      await rollupPackageDir(source);
-      break;
-
-    default:
-      usage();
-      return 2;
-  }
+export async function main(args: string[]): Promise<void> {
+  await program.parseAsync(args, { from: 'user' });
 }
 
 async function getPackagePath(search: string): Promise<string | undefined> {
@@ -40,20 +72,4 @@ async function getPackagePath(search: string): Promise<string | undefined> {
   if (await tryStat(path.resolve(process.cwd(), 'package.json'))) {
     return process.cwd();
   }
-}
-
-function usage(): void {
-  console.log(`
-USAGE: cfn-asset <options>
-
-Options:
-
-    --source, -s          The source directory. Defaults to the current working 
-                          directory.
-
-Commands:
-
-    content               Package the given directory into a zip
-    rollup                Bundle the given directory with Rollup.
-`);
 }

@@ -1,0 +1,24 @@
+{
+  "name": "@cfnutil-test/test-api",
+  "version": "0.2.1",
+  "private": true,
+  "dependencies": {
+    "cat-me": "^1.0.3",
+    "debug": "^4.1.1"
+  },
+  "devDependencies": {
+    "@cfnutil/assets": "^0.2.0"
+  },
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
+    "bundle": "cfn-asset rollup",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "bundle": {
+    "path": "dist/bundle.zip",
+    "hash": "6a1c2157748cbc096820b55cd9e58e5ebddd4fe0"
+  }
+}
