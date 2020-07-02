@@ -18,8 +18,9 @@
     "watch:compile": "node ../../tscWatch.js"
   },
   "files": [
-    "lib/*",
-    "dist/*"
+    "lib/",
+    "src/",
+    "dist/"
   ],
   "devDependencies": {
     "@cfnutil/assets": "^0.2.1",

@@ -16,6 +16,10 @@
     "lint": "eslint src/ --ext=ts,tsx",
     "watch:compile": "node ../../tscWatch.js"
   },
+  "files": [
+    "lib/",
+    "src/"
+  ],
   "dependencies": {
     "@cfnutil/assets": "^0.2.1",
     "@cfnutil/runtime": "^0.2.1",

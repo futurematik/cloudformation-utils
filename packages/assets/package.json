@@ -12,6 +12,10 @@
   "bin": {
     "cfn-asset": "cli/cfn-asset.js"
   },
+  "files": [
+    "lib/",
+    "src/"
+  ],
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint",
     "clean": "rm -rf lib/ dist/",
