@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
@@ -23,8 +23,8 @@
     "dist/"
   ],
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.1",
-    "@cfnutil/runtime": "^0.2.1",
+    "@cfnutil/assets": "^0.2.2",
+    "@cfnutil/runtime": "^0.2.2",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.697.0",
     "mime-types": "^2.1.27",
@@ -32,6 +32,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "0e9bbbe8bd65dd4078a1c7b6d2ea54b7a5272888"
+    "hash": "242f329eaa1eb2cef255f092938e46c9770a4692"
   }
 }
