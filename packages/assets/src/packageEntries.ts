@@ -9,6 +9,7 @@ import { findUpTree } from './util/findUpTree';
 export interface PackageEntriesOptions {
   archivePath?: string;
   ignorePaths?: string[];
+  packageInstallImage?: string;
   packageNames: string[];
   resolveRoot?: string;
 }
@@ -16,6 +17,7 @@ export interface PackageEntriesOptions {
 export async function* packageEntries({
   archivePath = 'node_modules',
   ignorePaths,
+  packageInstallImage = 'node:lts-slim',
   packageNames,
   resolveRoot = process.cwd(),
 }: PackageEntriesOptions): AsyncIterableIterator<ZipEntry> {
@@ -57,6 +59,9 @@ export async function* packageEntries({
   let exec = ['yarn', '--frozen-lockfile'];
 
   if (process.platform !== 'linux') {
+    console.log(
+      `current platform is ${process.platform} so installing on ${packageInstallImage}`,
+    );
     exec = [
       'docker',
       'run',
@@ -65,7 +70,7 @@ export async function* packageEntries({
       `${outDir}:/app`,
       '-w',
       '/app',
-      'node:slim',
+      packageInstallImage,
       ...exec,
     ];
   }

@@ -40,6 +40,10 @@ program
     [],
   )
   .option(
+    '--package-install-image <name>',
+    'a docker image to use to install images on non-linux platforms',
+  )
+  .option(
     '-r, --resolve-root <path>',
     'the directory to resolve packages from (defaults to CWD)',
     process.cwd(),
@@ -56,6 +60,7 @@ program
         ignorePaths: options.ignore,
         installPackages: options.install,
         outputPath: options.outputPath,
+        packageInstallImage: options.packageInstallImage,
         resolveRoot: options.resolveRoot,
       });
     },

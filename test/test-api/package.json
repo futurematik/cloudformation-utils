@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
-    "bundle": "cfn-asset rollup",
+    "bundle": "cfn-asset rollup --package-install-image node:alpine",
     "clean": "rm -rf lib/ dist/",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx",
@@ -19,6 +19,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "5e7c871a9c32be8d279d9e72ec7ae590e8a0a705"
+    "hash": "4184a1fe7db650f7dc0a06e4c1caac1204eb9c6e"
   }
 }

@@ -3,13 +3,23 @@ import { makeZipPackage, ZipEntry } from './makeZipPackage';
 import { rollupPackageEntries } from './rollupPackageEntries';
 import { packageEntries } from './packageEntries';
 
-export async function rollupPackage(
-  outputPath: string,
-  inputOptions: InputOptions,
-  installPackages?: string[],
+export interface RollupPackageOptions {
+  ignore?: string[];
+  inputOptions: InputOptions;
+  installPackages?: string[];
+  outputPath: string;
+  packageInstallImage?: string;
+  resolveRoot: string;
+}
+
+export async function rollupPackage({
+  ignore,
+  inputOptions,
+  installPackages,
+  outputPath,
+  packageInstallImage,
   resolveRoot = process.cwd(),
-  ignore?: string[],
-): Promise<string> {
+}: RollupPackageOptions): Promise<string> {
   const entries: ZipEntry[] = [];
 
   for await (const entry of rollupPackageEntries(inputOptions)) {
@@ -18,6 +28,7 @@ export async function rollupPackage(
   if (installPackages?.length) {
     const packageFiles = packageEntries({
       ignorePaths: ignore,
+      packageInstallImage,
       packageNames: installPackages,
       resolveRoot,
     });
