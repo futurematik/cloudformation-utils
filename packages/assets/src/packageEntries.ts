@@ -91,8 +91,8 @@ export async function* packageEntries({
     });
   });
 
-  return getFolderEntries({
-    source: outDir,
+  yield* getFolderEntries({
+    source: path.join(outDir, 'node_modules'),
     archivePath,
     ignore: ignorePaths,
   });
