@@ -77,7 +77,7 @@ export function makeChangeSetReporter(
         slowUpdateSecs * 1000,
         { leading: false },
       )
-    : () => {};
+    : undefined;
 
   return (event: ChangeSetReporterResource | true): void => {
     if (event === true) {
@@ -87,7 +87,10 @@ export function makeChangeSetReporter(
     debug(`report %O`, event);
 
     slow = false;
-    reportSlow();
+    if (reportSlow) {
+      reportSlow.cancel();
+      reportSlow();
+    }
 
     resources.set(event.name, event);
     stackStatus = event.stackStatus;

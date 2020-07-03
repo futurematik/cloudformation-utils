@@ -11,12 +11,18 @@
     "@cfnutil/put-object": "^0.2.5",
     "@cfnutil/unpack-asset": "^0.2.5",
     "@cfnutil/web": "^0.2.5",
+    "@fmtk/async-main": "^0.1.1",
     "@fmtk/validation": "^3.5.3",
     "chalk": "^4.1.0",
     "commander": "^5.1.0",
     "minimist": "^1.2.5"
   },
   "scripts": {
-    "start": "node -r esm -r ts-node/register src/index.ts"
+    "build": "yarn clean && yarn compile && yarn lint",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "start": "node -r esm -r ts-node/register src/index.ts",
+    "watch:compile": "node ../../tscWatch.js"
   }
 }

@@ -17,12 +17,29 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch cfn-asset",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/packages/assets/cli/cfn-asset.js",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "args": ["rollup"],
       "cwd": "${workspaceFolder}/test/test-api"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch deploy",
+      "runtimeArgs": ["-r", "esm"],
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/test/deploy-cra-test/lib/index.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "args": [
+        "build",
+        "--bucket",
+        "fmtktestdeploy",
+        "--stack-version",
+        "latest"
+      ],
+      "console": "integratedTerminal"
     }
   ]
 }

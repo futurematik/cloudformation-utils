@@ -52,7 +52,7 @@ export function makeUploadReporter(
     files.set(file, bytesUp);
 
     const current = [...files.values()].reduce((a, x) => a + x, 0);
-    bar.update(current / bar.total);
+    bar.update(current);
   }
 
   return report;

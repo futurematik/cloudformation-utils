@@ -1,4 +1,4 @@
-import { run } from '@cfnutil/assets';
+import { run } from '@fmtk/async-main';
 import { makeCli } from '@cfnutil/core';
 import { makeStack } from './makeStack';
 
