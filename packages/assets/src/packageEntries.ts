@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import childProc from 'child_process';
 import tempy from 'tempy';
-import { ZipEntry } from './makeZipPackage';
+import { ZipEntry } from './ZipEntry';
 import { getFolderEntries } from './getFolderEntries';
 import { findUpTree } from './util/findUpTree';
 

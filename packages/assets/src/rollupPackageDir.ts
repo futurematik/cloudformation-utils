@@ -9,6 +9,7 @@ export interface RollupPackageDirOptions {
   packageInstallImage?: string;
   resolveRoot?: string;
   rollupConfigPath?: string;
+  smokeTest?: boolean;
 }
 
 export async function rollupPackageDir(
@@ -47,12 +48,13 @@ export async function rollupPackageDir(
 
   await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
   const hash = await rollupPackage({
-    inputOptions: rollupConfig.default,
-    outputPath: fullOutputPath,
-    resolveRoot: opts?.resolveRoot || dirname,
     ignore: ignorePaths,
+    inputOptions: rollupConfig.default,
     installPackages,
+    outputPath: fullOutputPath,
     packageInstallImage: opts?.packageInstallImage,
+    resolveRoot: opts?.resolveRoot || dirname,
+    smokeTest: opts?.smokeTest,
   });
 
   const pkgPath = path.resolve(dirname, 'package.json');

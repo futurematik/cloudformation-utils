@@ -48,6 +48,10 @@ program
     'the directory to resolve packages from (defaults to CWD)',
     process.cwd(),
   )
+  .option(
+    '--smoke-test',
+    'execute the bundle output to check for unresolved imports or bad syntax',
+  )
   .requiredOption(
     '-s, --source <path>',
     'the source directory (defaults to CWD)',
@@ -62,6 +66,7 @@ program
         outputPath: options.outputPath,
         packageInstallImage: options.packageInstallImage,
         resolveRoot: options.resolveRoot,
+        smokeTest: options.smokeTest,
       });
     },
   );

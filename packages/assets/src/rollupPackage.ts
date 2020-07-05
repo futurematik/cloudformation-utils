@@ -1,7 +1,13 @@
+import fs from 'fs';
+import path from 'path';
+import proc from 'child_process';
 import { InputOptions } from 'rollup';
-import { makeZipPackage, ZipEntry } from './makeZipPackage';
+import chalk from 'chalk';
+import { makeZipPackage } from './makeZipPackage';
 import { rollupPackageEntries } from './rollupPackageEntries';
 import { packageEntries } from './packageEntries';
+import { getZipEntryContent } from './util/getZipEntryContent';
+import { ZipEntry } from './ZipEntry';
 
 export interface RollupPackageOptions {
   ignore?: string[];
@@ -10,6 +16,7 @@ export interface RollupPackageOptions {
   outputPath: string;
   packageInstallImage?: string;
   resolveRoot: string;
+  smokeTest?: boolean;
 }
 
 export async function rollupPackage({
@@ -19,10 +26,14 @@ export async function rollupPackage({
   outputPath,
   packageInstallImage,
   resolveRoot = process.cwd(),
+  smokeTest,
 }: RollupPackageOptions): Promise<string> {
   const entries: ZipEntry[] = [];
 
   for await (const entry of rollupPackageEntries(inputOptions)) {
+    if (smokeTest && entry.archivePath.endsWith('.js')) {
+      await runSmokeTest(entry, path.dirname(outputPath));
+    }
     entries.push(entry);
   }
   if (installPackages?.length) {
@@ -38,4 +49,40 @@ export async function rollupPackage({
     }
   }
   return makeZipPackage(outputPath, entries);
+}
+
+async function runSmokeTest(
+  entry: ZipEntry,
+  outputPath: string,
+): Promise<void> {
+  console.log(chalk.cyan(`\nRunning smoke test on ${entry.archivePath}...\n`));
+  const outputName = path.join(outputPath, entry.archivePath);
+  const content = await getZipEntryContent(entry);
+
+  if (typeof content === 'string' || Buffer.isBuffer(content)) {
+    await fs.promises.writeFile(outputName, content);
+  } else {
+    const output = fs.createWriteStream(outputName);
+    const done = new Promise((resolve, reject) => {
+      output.on('error', reject);
+      output.on('finish', resolve);
+    });
+    content.pipe(output);
+    await done;
+  }
+
+  const result = proc.spawn(process.argv0, [outputName], {
+    stdio: 'inherit',
+  });
+
+  await new Promise((resolve, reject) => {
+    result.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`smoke test failed with exit code ${code}`));
+      } else {
+        resolve();
+      }
+    });
+    result.on('error', reject);
+  });
 }

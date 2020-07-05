@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import ignore from 'ignore';
-import { ZipEntry } from './makeZipPackage';
+import { ZipEntry } from './ZipEntry';
 
 export interface FolderEntriesOptions {
   archivePath?: string;
