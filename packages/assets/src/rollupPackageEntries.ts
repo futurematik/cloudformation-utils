@@ -1,5 +1,5 @@
 import { rollup, InputOptions } from 'rollup';
-import { ZipEntry } from './makeZipPackage';
+import { ZipEntry } from './ZipEntry';
 
 // prevent build tooling recognizing the string (rollup source seems to do this)
 const SourceMapUrl = 'source_Mapping_URL'.replace(/_/g, '');

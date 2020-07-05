@@ -1,4 +1,4 @@
-import { ZipEntry, EntryContent } from '../makeZipPackage';
+import { ZipEntry, EntryContent } from '../ZipEntry';
 
 export async function getZipEntryContent({
   content,
