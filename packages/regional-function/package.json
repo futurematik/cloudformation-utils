@@ -1,0 +1,29 @@
+{
+  "name": "@cfnutil/regional-function",
+  "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
+  "repository": "https://github.com/futurematik/cloudformation-utils",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "0.2.7",
+  "main": "lib/index.js",
+  "files": [
+    "lib/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn compile && yarn lint",
+    "clean": "rm -rf lib/ dist/",
+    "compile": "tsc",
+    "lint": "eslint src/ --ext=ts,tsx",
+    "watch:compile": "node ../../tscWatch.js"
+  },
+  "dependencies": {
+    "@cfnutil/core": "^0.2.7",
+    "@cfnutil/runtime": "^0.2.2",
+    "@cfnutil/regional-function-lambda": "^0.2.5",
+    "@fmtk/cfntypes": "^0.3.4"
+  }
+}
