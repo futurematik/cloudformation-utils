@@ -11,7 +11,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
-    "bundle": "cfn-asset rollup",
+    "bundle": "cfn-asset rollup --smoke-test",
     "clean": "rm -rf lib/ dist/",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx",
@@ -30,6 +30,6 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "1ad2dee91c01cd145c354dc5952479100d1be988"
+    "hash": "87c8775ab2b555cc7558b06903f8e4b8b6d640bb"
   }
 }

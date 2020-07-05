@@ -23,12 +23,14 @@ export * from './policy/Principal';
 
 export * from './resources/Asset';
 export * from './resources/LambdaRuntime';
+export * from './resources/LateBoundToken';
 export * from './resources/makeAsset';
 export * from './resources/makeAssetFromPackage';
 export * from './resources/makeAwsResource';
 export * from './resources/makeDomainAlias';
 export * from './resources/makeIamRole';
 export * from './resources/makeLambdaAssumeRolePolicyDocument';
+export * from './resources/makeLateBoundToken';
 export * from './resources/makeParameter';
 export * from './resources/makeParameters';
 export * from './resources/makeResource';

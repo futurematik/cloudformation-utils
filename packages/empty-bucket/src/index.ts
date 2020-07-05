@@ -9,9 +9,9 @@ import {
   makeTemplateBuilder,
   makePolicyStatement,
   PolicyEffect,
-  bucketArn,
   makeResource,
   makeAssetFromPackage,
+  makePolicy,
 } from '@cfnutil/core';
 import { EmptyBucketProps } from '@cfnutil/empty-bucket-lambda';
 import { ResourceType } from '@fmtk/cfntypes';
@@ -38,6 +38,15 @@ export function makeEmptyBucketResource(
     ManagedPolicyArns: [
       'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
     ],
+    Policies: [
+      makePolicy(`${name}Policy`, [
+        makePolicyStatement({
+          Action: ['s3:ListBucket*', 's3:DeleteObject*'],
+          Effect: PolicyEffect.Allow,
+          Resource: '*', // need all resources so it still works on delete
+        }),
+      ]),
+    ],
   });
 
   const [handlerBuilder, handler] = makeAwsResource(
@@ -61,20 +70,6 @@ export function makeEmptyBucketResource(
         props: EmptyBucketProps,
         options?: ResourceBase,
       ): [TemplateBuilder, ResourceAttributesBase] {
-        role.addStatement(
-          makePolicyStatement({
-            Action: 's3:ListBucket*',
-            Effect: PolicyEffect.Allow,
-            Resource: bucketArn(props.Bucket),
-          }),
-        );
-        role.addStatement(
-          makePolicyStatement({
-            Action: 's3:DeleteObject*',
-            Effect: PolicyEffect.Allow,
-            Resource: bucketArn(props.Bucket, '*'),
-          }),
-        );
         const [resource, attribs] = makeResource(
           'Custom::EmptyBucket',
           name,

@@ -27,7 +27,21 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch deploy",
+      "name": "Launch build",
+      "runtimeArgs": ["-r", "esm"],
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/test/deploy-cra-test/lib/index.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "args": [
+        "build",
+        "--stack-version",
+        "latest"
+      ],
+    }
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch upload",
       "runtimeArgs": ["-r", "esm"],
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/test/deploy-cra-test/lib/index.js",

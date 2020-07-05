@@ -1,30 +1,42 @@
 import * as lambda from 'aws-lambda';
-import { hash } from './hash';
 import { sendResponse } from './sendResponse';
+import { makeResourceName } from './makeResourceName';
+
+export type CreateResourceEvent = lambda.CloudFormationCustomResourceCreateEvent & {
+  PhysicalResourceId: string;
+};
+
+export type UpdateResourceEvent = lambda.CloudFormationCustomResourceUpdateEvent;
+export type DeleteResourceEvent = lambda.CloudFormationCustomResourceDeleteEvent;
+
+export interface ResourceData {
+  [key: string]: any;
+}
 
 export type ResourceEvent =
-  | (lambda.CloudFormationCustomResourceCreateEvent & {
-      PhysicalResourceId: string;
-    })
-  | lambda.CloudFormationCustomResourceUpdateEvent
-  | lambda.CloudFormationCustomResourceDeleteEvent;
+  | CreateResourceEvent
+  | UpdateResourceEvent
+  | DeleteResourceEvent;
 
-export type ResourceResponse = {
+export interface ResourceSuccessResponse<Data = ResourceData> {
   PhysicalResourceId?: string;
-  Data?: {
-    [Key: string]: any;
-  };
+  Data?: Data;
   NoEcho?: boolean;
-} & (
-  | {
-      Status: 'FAILED';
-      Reason: string;
-    }
-  | {
-      Status: 'SUCCESS';
-      Reason?: string;
-    }
-);
+  Reason?: string;
+  Status: 'SUCCESS';
+}
+
+export interface ResourceFailedResponse<Data = ResourceData> {
+  PhysicalResourceId?: string;
+  Data?: Data;
+  NoEcho?: boolean;
+  Reason: string;
+  Status: 'FAILED';
+}
+
+export type ResourceResponse<Data = ResourceData> =
+  | ResourceSuccessResponse<Data>
+  | ResourceFailedResponse<Data>;
 
 export interface ResourceHandler {
   (event: ResourceEvent, context: lambda.Context): PromiseLike<
@@ -40,7 +52,9 @@ export function makeHandler(
     const event = sourceEvent as ResourceEvent;
 
     if (event.RequestType === 'Create') {
-      event.PhysicalResourceId = hash([event.StackId, event.LogicalResourceId]);
+      event.PhysicalResourceId = makeResourceName(
+        `${event.StackId}-${event.LogicalResourceId}`,
+      );
     }
 
     let response: ResourceResponse | undefined;

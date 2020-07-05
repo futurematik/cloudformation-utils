@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { TemplateBuilder } from '../template/TemplateBuilder';
-import { TemplateItemType } from '../template/TemplateItem';
+import { TemplateItemType, TokenTemplateItem } from '../template/TemplateItem';
 import { Template } from '../template/Template';
 import { Asset } from '../resources/Asset';
 import { hash } from '@cfnutil/runtime';
 import { HashStream } from '@cfnutil/assets';
 import { AssetManifest } from './AssetManifest';
+import { resolveTokens } from '../util/resolveTokens';
 
 export interface StagingOptions {
   outputDir: string;
@@ -34,7 +35,21 @@ export async function buildStack(
   reporter?: BuildStackReporter,
 ): Promise<string> {
   await fs.promises.mkdir(options.outputDir, { recursive: true });
-  const templateItems = builder.build();
+  const allItems = builder.build();
+
+  const tokens = allItems.filter(
+    (x) => x.type === TemplateItemType.Token,
+  ) as TokenTemplateItem[];
+
+  const tokenMap = new Map<symbol, unknown>();
+
+  for (const token of tokens) {
+    tokenMap.set(token.definition.token, await token.definition.generate());
+  }
+
+  const templateItems = allItems.filter(
+    (x) => x.type !== TemplateItemType.Token,
+  );
 
   const templateName = [name, options.version, 'template.json']
     .filter(Boolean)
@@ -96,11 +111,17 @@ export async function buildStack(
         break;
 
       case TemplateItemType.Parameter:
-        template.Parameters[item.name] = item.definition;
+        template.Parameters[resolveTokens(item.name, tokenMap)] = resolveTokens(
+          item.definition,
+          tokenMap,
+        );
         break;
 
       case TemplateItemType.Resource:
-        template.Resources[item.name] = item.definition;
+        template.Resources[resolveTokens(item.name, tokenMap)] = resolveTokens(
+          item.definition,
+          tokenMap,
+        );
         break;
 
       default:

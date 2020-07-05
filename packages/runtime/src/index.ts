@@ -7,5 +7,6 @@ export * from './metadata/splitMetadataHeaders';
 export * from './util/backoff';
 export * from './util/hash';
 export * from './util/makeHandler';
+export * from './util/makeResourceName';
 export * from './util/resourceProps';
 export * from './util/sendResponse';

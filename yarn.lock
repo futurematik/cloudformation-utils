@@ -2261,10 +2261,10 @@
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
 
-"@rollup/plugin-node-resolve@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-8.0.1.tgz#364b5938808ee6b5164dea5ef7291be3f7395199"
-  integrity sha512-KIeAmueDDaYMqMBnUngLVVZhURwxA12nq/YB6nGm5/JpVyOMwI1fCVU3oL/dAnnLBG7oiPXntO5LHOiMrfNXCA==
+"@rollup/plugin-node-resolve@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-8.1.0.tgz#1da5f3d0ccabc8f66f5e3c74462aad76cfd96c47"
+  integrity sha512-ovq7ZM3JJYUUmEjjO+H8tnUdmQmdQudJB7xruX8LFZ1W2q8jXdPUS6SsIYip8ByOApu4RR7729Am9WhCeCMiHA==
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
     "@types/resolve" "0.0.8"
@@ -2695,6 +2695,13 @@
   version "2.9.1"
   resolved "https://registry.npmjs.org/@types/yauzl/-/yauzl-2.9.1.tgz#d10f69f9f522eef3cf98e30afb684a1e1ec923af"
   integrity sha512-A1b8SU4D10uoPjwb0lnHmmu8wZhR9d+9o2PKBQT2jU5YPTKsxac6M2qGAdY7VcL+dHHhARVUDmeg0rOrcd9EjA==
+  dependencies:
+    "@types/node" "*"
+
+"@types/yazl@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.npmjs.org/@types/yazl/-/yazl-2.4.2.tgz#d5f8a4752261badbf1a36e8b49e042dc18ec84bc"
+  integrity sha512-T+9JH8O2guEjXNxqmybzQ92mJUh2oCwDDMSSimZSe1P+pceZiFROZLYmcbqkzV5EUwz6VwcKXCO2S2yUpra6XQ==
   dependencies:
     "@types/node" "*"
 
@@ -12039,17 +12046,10 @@ rollup-plugin-terser@^6.1.0:
     serialize-javascript "^3.0.0"
     terser "^4.7.0"
 
-rollup@^2.16.1:
-  version "2.16.1"
-  resolved "https://registry.npmjs.org/rollup/-/rollup-2.16.1.tgz#97805e88071e2c6727bd0b64904976d14495c873"
-  integrity sha512-UYupMcbFtoWLB6ZtL4hPZNUTlkXjJfGT33Mmhz3hYLNmRj/cOvX2B26ZxDQuEpwtLdcyyyraBGQ7EfzmMJnXXg==
-  optionalDependencies:
-    fsevents "~2.1.2"
-
-rollup@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.npmjs.org/rollup/-/rollup-2.17.0.tgz#3db289792c567242b600d88cf3718dd206c7f3f2"
-  integrity sha512-4Um68vKyyTLzT+EWClgc+nyxSlunlmx8wgCO16RDicwxvccnyBHguoNqxPaJL/YPAdvuAJkqaFPf/BfDojzEZA==
+rollup@^2.18.2:
+  version "2.18.2"
+  resolved "https://registry.npmjs.org/rollup/-/rollup-2.18.2.tgz#886ac6e4549e493df106c3e2580c89aeb997be25"
+  integrity sha512-+mzyZhL9ZyLB3eHBISxRNTep9Z2qCuwXzAYkUbFyz7yNKaKH03MFKeiGOS1nv2uvPgDb4ASKv+FiS5mC4h5IFQ==
   optionalDependencies:
     fsevents "~2.1.2"
 
@@ -14385,6 +14385,13 @@ yauzl@^2.10.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
+
+yazl@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.npmjs.org/yazl/-/yazl-2.5.1.tgz#a3d65d3dd659a5b0937850e8609f22fffa2b5c35"
+  integrity sha512-phENi2PLiHnHb6QBVot+dJnaAZ0xosj7p3fWl+znIjBDlnMI2PsZCJZ306BPTFOaHf5qdDEI8x5qFrSOBN5vrw==
+  dependencies:
+    buffer-crc32 "~0.2.3"
 
 yn@3.1.1:
   version "3.1.1"

@@ -61,7 +61,7 @@ async function unpack(props: UnpackAssetProps): Promise<void> {
     })
     .createReadStream();
 
-  const done = new Promise((resolve) => objStream.once('end', resolve));
+  const done = new Promise((resolve) => objStream.once('finish', resolve));
   objStream.pipe(file);
   await done;
 

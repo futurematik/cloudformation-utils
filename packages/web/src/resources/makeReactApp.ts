@@ -19,6 +19,7 @@ import {
   ResourceType,
   S3BucketAttributes,
   CloudFrontDistributionAttributes,
+  CloudFrontDistributionLambdaFunctionAssociation,
 } from '@fmtk/cfntypes';
 import { makeOaiArn } from '../util/makeOaiArn';
 import { makeCloudFrontAliasTarget } from '../util/makeCloudFrontAliasTarget';
@@ -38,6 +39,7 @@ export interface ReactAppProps {
   DomainName: string;
   EnableIpv6?: boolean;
   HostedZoneId: string;
+  LambdaFunctionAssociations?: CloudFrontDistributionLambdaFunctionAssociation[];
   PriceClass?: string;
   Source: S3ObjectRef;
 }
@@ -231,6 +233,7 @@ export function makeReactAppFactory(dep: {
               ForwardedValues: {
                 QueryString: false,
               },
+              LambdaFunctionAssociations: props.LambdaFunctionAssociations,
               TargetOriginId: 'S3Origin',
               ViewerProtocolPolicy: 'redirect-to-https',
             },

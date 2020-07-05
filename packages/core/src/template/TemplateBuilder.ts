@@ -36,3 +36,9 @@ export function makeTemplateBuilder(items: ItemOrBuilder[]): TemplateBuilder {
     },
   };
 }
+
+export function makeTemplateBuilderWithOptionalResources(
+  items: (ItemOrBuilder | undefined | null | false)[],
+): TemplateBuilder {
+  return makeTemplateBuilder(items.filter(Boolean) as ItemOrBuilder[]);
+}
