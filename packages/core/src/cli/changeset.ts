@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { createChangeSet } from '../deploy/createChangeSet';
 import { setParam } from './setParam';
 import { runExecuteCommand } from './execute';
+import { ChangeSetParameterMap } from '../deploy/ChangeSetParameterMap';
 
 export interface ChangesetCommandOptions {
   defaultStackName?: string;
@@ -13,7 +14,7 @@ export interface ChangesetOptions {
   manifestKey?: string;
   name: string;
   stackVersion: string;
-  params?: Record<string, string>;
+  params?: ChangeSetParameterMap;
 }
 
 export async function runChangesetCommand(

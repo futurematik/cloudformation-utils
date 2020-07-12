@@ -1,13 +1,17 @@
 import { CloudFormation } from 'aws-sdk';
 import { downloadManifest } from './downloadManifest';
 import { stackExists } from './stackExists';
+import {
+  ChangeSetParameterMap,
+  convertParameters,
+} from './ChangeSetParameterMap';
 
 export interface ChangeSetOptions {
   stackName: string;
   version: string;
   bucketName: string;
   manifestKey: string;
-  parameters?: Record<string, string>;
+  parameters?: ChangeSetParameterMap;
 }
 
 export async function createChangeSet(
@@ -17,16 +21,10 @@ export async function createChangeSet(
     options.bucketName,
     options.manifestKey,
   );
-  const params: CloudFormation.Parameter[] = [];
 
-  if (options.parameters) {
-    for (const key in options.parameters) {
-      params.push({
-        ParameterKey: key,
-        ParameterValue: options.parameters[key],
-      });
-    }
-  }
+  const params = options.parameters
+    ? convertParameters(options.parameters)
+    : [];
 
   for (const [asset, parameter] of Object.entries(manifest.parameters)) {
     params.push({

@@ -3,6 +3,7 @@ import { TemplateBuilder } from '../template/TemplateBuilder';
 import { setParam } from './setParam';
 import { runChangesetCommand } from './changeset';
 import { runBuildCommand } from './build';
+import { ChangeSetParameterMap } from '../deploy/ChangeSetParameterMap';
 
 export interface DeployCommandOptions {
   builder: (name: string) => TemplateBuilder;
@@ -16,7 +17,7 @@ export interface DeployOptions {
   outdir?: string;
   name: string;
   stackVersion: string;
-  params?: Record<string, string>;
+  params?: ChangeSetParameterMap;
 }
 
 export async function runDeployCommand(opts: DeployOptions): Promise<void> {

@@ -8,6 +8,7 @@ export * from './cli/upload';
 
 export * from './deploy/AssetManifest';
 export * from './deploy/buildStack';
+export * from './deploy/ChangeSetParameterMap';
 export * from './deploy/createChangeSet';
 export * from './deploy/executeChangeSet';
 export * from './deploy/uploadStack';
