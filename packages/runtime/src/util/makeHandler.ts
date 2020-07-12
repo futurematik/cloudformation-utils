@@ -48,7 +48,7 @@ export function makeHandler(
   handler: ResourceHandler,
 ): lambda.CloudFormationCustomResourceHandler {
   return async (sourceEvent, context): Promise<void> => {
-    console.log(`custom resource event`, sourceEvent);
+    console.dir({ msg: `custom resource event`, sourceEvent });
     const event = sourceEvent as ResourceEvent;
 
     if (event.RequestType === 'Create') {
@@ -62,7 +62,7 @@ export function makeHandler(
     try {
       response = await handler(event, context);
     } catch (err) {
-      console.log(`FAILED`, err);
+      console.dir({ msg: `FAILED`, err });
 
       response = {
         PhysicalResourceId: event.PhysicalResourceId,
@@ -79,7 +79,7 @@ export function makeHandler(
       StackId: event.StackId,
     };
 
-    console.log(`custom resource response`, fullResponse);
+    console.dir({ msg: `custom resource response`, fullResponse });
     await sendResponse(event.ResponseURL, fullResponse);
   };
 }

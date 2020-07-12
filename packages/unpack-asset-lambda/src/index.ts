@@ -80,17 +80,24 @@ async function unpack(props: UnpackAssetProps): Promise<void> {
       entry.info.fileName,
     );
 
+    const objectInfo = {
+      Bucket: props.DestinationBucket,
+      Key: destPath,
+      ...headers,
+      Metadata: meta,
+      ContentType:
+        headers.ContentType ||
+        mime(entry.info.fileName) ||
+        'application/octet-stream',
+    };
+
+    console.log(`uploading ${objectInfo.Key}`);
+    console.dir(objectInfo);
+
     await s3
       .upload({
         Body: await entry.open(),
-        Bucket: props.DestinationBucket,
-        Key: destPath,
-        ...headers,
-        Metadata: meta,
-        ContentType:
-          headers.ContentType ||
-          mime(entry.info.fileName) ||
-          'application/octet-stream',
+        ...objectInfo,
       })
       .promise();
   }

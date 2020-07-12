@@ -65,21 +65,18 @@ async function empty(bucket: string, prefix?: string): Promise<void> {
       break;
     }
 
-    const ids = objects.Contents.reduce(
+    const keys = objects.Contents.reduce(
       (a, { Key }) => (Key ? [...a, { Key }] : a),
       [] as S3.ObjectIdentifier[],
     );
 
-    console.log(`deleting ids`, ids);
+    console.dir({ msg: `deleting objects`, keys });
 
     await s3
       .deleteObjects({
         Bucket: bucket,
         Delete: {
-          Objects: objects.Contents.reduce(
-            (a, { Key }) => (Key ? [...a, { Key }] : a),
-            [] as S3.ObjectIdentifier[],
-          ),
+          Objects: keys,
         },
       })
       .promise();
