@@ -2,8 +2,8 @@ import { CloudFormation } from 'aws-sdk';
 
 export interface ChangeSetParameter {
   ParameterValue?: string;
-  UserPreviousValue?: boolean;
-  ResolveValue?: string;
+  UsePreviousValue?: boolean;
+  ResolvedValue?: string;
 }
 
 export interface ChangeSetParameterMap {

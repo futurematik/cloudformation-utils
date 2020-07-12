@@ -13,7 +13,7 @@ export function setParam(
   const eqIndex = assign.indexOf('=');
   if (eqIndex < 1) {
     key = assign;
-    value = { UserPreviousValue: true };
+    value = { UsePreviousValue: true };
   } else {
     key = assign.slice(0, eqIndex);
     value = assign.slice(eqIndex + 1);
