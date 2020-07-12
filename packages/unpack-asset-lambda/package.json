@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "main": "lib/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
@@ -23,8 +23,8 @@
     "dist/"
   ],
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.6",
-    "@cfnutil/runtime": "^0.2.4",
+    "@cfnutil/assets": "^0.2.7",
+    "@cfnutil/runtime": "^0.2.5",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.697.0",
     "mime-types": "^2.1.27",
