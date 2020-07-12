@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil-test/cra-test",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -16,7 +16,7 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@cfnutil/assets": "^0.2.7"
+    "@cfnutil/assets": "^0.2.8"
   },
   "scripts": {
     "build": "react-scripts build && yarn bundle",
