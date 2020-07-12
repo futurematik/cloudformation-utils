@@ -29,7 +29,7 @@
   },
   "bundle": {
     "path": "dist/bundle.zip",
-    "hash": "8cc551d914b22af8eb80d24a7a9d961f453a1264"
+    "hash": "28d3d27bb10b13c05149e2a58bbfe75d0345fc33"
   },
   "dependencies": {
     "yazl": "^2.5.1"

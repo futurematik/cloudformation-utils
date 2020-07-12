@@ -16,7 +16,13 @@ export async function makeZipPackageStream(
     error = err || new Error(`unknown error occurred`);
   });
 
+  const sortedEntries: ZipEntry[] = [];
   for await (const entry of entries) {
+    sortedEntries.push(entry);
+  }
+  sortedEntries.sort((a, b) => a.archivePath.localeCompare(b.archivePath));
+
+  for await (const entry of sortedEntries) {
     if (error) {
       throw error;
     }
@@ -26,7 +32,7 @@ export async function makeZipPackageStream(
         ? await entry.content()
         : entry.content;
 
-    zip.append(content, { name: entry.archivePath });
+    zip.append(content, { name: entry.archivePath, date: new Date(0) });
   }
 
   await zip.finalize();
