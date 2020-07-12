@@ -1,6 +1,7 @@
 import * as lambda from 'aws-lambda';
 import { sendResponse } from './sendResponse';
 import { makeResourceName } from './makeResourceName';
+import { writeLog } from './writeLog';
 
 export type CreateResourceEvent = lambda.CloudFormationCustomResourceCreateEvent & {
   PhysicalResourceId: string;
@@ -48,7 +49,7 @@ export function makeHandler(
   handler: ResourceHandler,
 ): lambda.CloudFormationCustomResourceHandler {
   return async (sourceEvent, context): Promise<void> => {
-    console.dir({ msg: `custom resource event`, sourceEvent });
+    writeLog(`custom resource event`, sourceEvent);
     const event = sourceEvent as ResourceEvent;
 
     if (event.RequestType === 'Create') {
@@ -62,7 +63,7 @@ export function makeHandler(
     try {
       response = await handler(event, context);
     } catch (err) {
-      console.dir({ msg: `FAILED`, err });
+      writeLog(`FAILED`, err);
 
       response = {
         PhysicalResourceId: event.PhysicalResourceId,
@@ -79,7 +80,7 @@ export function makeHandler(
       StackId: event.StackId,
     };
 
-    console.dir({ msg: `custom resource response`, fullResponse });
+    writeLog(`custom resource response`, fullResponse);
     await sendResponse(event.ResponseURL, fullResponse);
   };
 }

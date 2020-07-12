@@ -11,6 +11,7 @@ import {
   matchMetadata,
   splitMetadataHeaders,
   resourceProps,
+  writeLog,
 } from '@cfnutil/runtime';
 import { properties, text, optional, array } from '@fmtk/validation';
 import { openZip } from 'unzip-iterable';
@@ -32,26 +33,29 @@ export const validateUnpackAssetProps = properties<UnpackAssetProps>({
 
 export const handler = makeHandler(
   async (event): Promise<ResourceResponse> => {
-    if (event.RequestType !== 'Create' && event.RequestType !== 'Update') {
-      return { Status: 'SUCCESS' };
+    if (event.RequestType === 'Create' || event.RequestType === 'Update') {
+      const props = resourceProps(
+        validateUnpackAssetProps,
+        event.ResourceProperties,
+      );
+
+      await unpack(props);
     }
 
-    const props = resourceProps(
-      validateUnpackAssetProps,
-      event.ResourceProperties,
-    );
-
-    await unpack(props);
     return { Status: 'SUCCESS' };
   },
 );
 
 async function unpack(props: UnpackAssetProps): Promise<void> {
+  writeLog(`unpack`, props);
+
   const s3 = new S3();
   const metadata = props.Metadata || [];
 
   const filePath = '/tmp/source.zip';
   const file = fs.createWriteStream(filePath);
+
+  writeLog(`downloading asset`);
 
   const objStream = s3
     .getObject({
@@ -61,10 +65,11 @@ async function unpack(props: UnpackAssetProps): Promise<void> {
     })
     .createReadStream();
 
-  const done = new Promise((resolve) => objStream.once('finish', resolve));
+  const done = new Promise((resolve) => file.once('finish', resolve));
   objStream.pipe(file);
   await done;
 
+  writeLog(`asset downloaded to ${filePath}`);
   const zip = openZip(filePath);
 
   for await (const entry of zip) {
@@ -91,8 +96,7 @@ async function unpack(props: UnpackAssetProps): Promise<void> {
         'application/octet-stream',
     };
 
-    console.log(`uploading ${objectInfo.Key}`);
-    console.dir(objectInfo);
+    writeLog(`uploading ${objectInfo.Key}`, objectInfo);
 
     await s3
       .upload({

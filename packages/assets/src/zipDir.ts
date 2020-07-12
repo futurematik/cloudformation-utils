@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { makeZipPackage } from './makeZipPackage';
 import { getFolderEntries } from './getFolderEntries';
+import { addBundleInfoToPackageJson } from './addBundleInfoToPackageJson';
 
 export interface ZipDirOptions {
   outputPath?: string;
@@ -23,14 +24,9 @@ export async function zipDir(
   );
 
   if (opts?.packagePath) {
-    const packageFilePath = path.resolve(opts.packagePath, 'package.json');
-    const pkg = JSON.parse(await fs.promises.readFile(packageFilePath, 'utf8'));
-
-    pkg.bundle = {
+    await addBundleInfoToPackageJson(opts?.packagePath, {
       path: outputPath,
       hash,
-    };
-
-    await fs.promises.writeFile(packageFilePath, JSON.stringify(pkg, null, 2));
+    });
   }
 }

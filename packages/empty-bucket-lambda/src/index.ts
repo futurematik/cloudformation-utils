@@ -1,5 +1,10 @@
 import S3 from 'aws-sdk/clients/s3';
-import { makeHandler, ResourceResponse, resourceProps } from '@cfnutil/runtime';
+import {
+  makeHandler,
+  ResourceResponse,
+  resourceProps,
+  writeLog,
+} from '@cfnutil/runtime';
 import { properties, text, optional, bool } from '@fmtk/validation';
 
 export interface EmptyBucketProps {
@@ -53,7 +58,7 @@ export const handler = makeHandler(
 
 async function empty(bucket: string, prefix?: string): Promise<void> {
   const s3 = new S3();
-  console.log(`empyting bucket ${bucket} (prefix='${prefix || ''}')`);
+  writeLog(`empyting bucket ${bucket} (prefix='${prefix || ''}')`);
 
   for (;;) {
     const objects = await s3
@@ -61,7 +66,7 @@ async function empty(bucket: string, prefix?: string): Promise<void> {
       .promise();
 
     if (!objects.Contents || !objects.Contents.length) {
-      console.log(`nothing more to delete`);
+      writeLog(`nothing more to delete`);
       break;
     }
 
@@ -70,7 +75,7 @@ async function empty(bucket: string, prefix?: string): Promise<void> {
       [] as S3.ObjectIdentifier[],
     );
 
-    console.dir({ msg: `deleting objects`, keys });
+    writeLog(`deleting objects`, keys);
 
     await s3
       .deleteObjects({

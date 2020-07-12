@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { rollupPackage } from './rollupPackage';
+import { addBundleInfoToPackageJson } from './addBundleInfoToPackageJson';
 
 export interface RollupPackageDirOptions {
   ignorePaths?: string[];
@@ -57,13 +58,8 @@ export async function rollupPackageDir(
     smokeTest: opts?.smokeTest,
   });
 
-  const pkgPath = path.resolve(dirname, 'package.json');
-  const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8'));
-
-  pkg.bundle = {
+  await addBundleInfoToPackageJson(dirname, {
     path: outputPath,
     hash,
-  };
-
-  await fs.promises.writeFile(pkgPath, JSON.stringify(pkg, null, 2));
+  });
 }

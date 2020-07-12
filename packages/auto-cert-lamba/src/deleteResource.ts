@@ -2,7 +2,7 @@ import { AutoCertProps } from './AutoCertProps';
 import ACM from 'aws-sdk/clients/acm';
 import { CloudFormationCustomResourceDeleteEvent } from 'aws-lambda';
 import { waitForCertificateUse } from './waitForCertificateUse';
-import { ResourceResponse } from '@cfnutil/runtime';
+import { ResourceResponse, writeLog } from '@cfnutil/runtime';
 
 export async function deleteResource(
   props: AutoCertProps,
@@ -12,7 +12,7 @@ export async function deleteResource(
   const arn = event.PhysicalResourceId;
 
   if (!arn.startsWith('arn:aws:acm')) {
-    console.log(`physical resource "${arn}" doesn't seem to be mine`);
+    writeLog(`physical resource "${arn}" doesn't seem to be mine`);
     return {
       Status: 'SUCCESS',
     };

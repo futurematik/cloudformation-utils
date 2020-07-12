@@ -10,3 +10,4 @@ export * from './util/makeHandler';
 export * from './util/makeResourceName';
 export * from './util/resourceProps';
 export * from './util/sendResponse';
+export * from './util/writeLog';

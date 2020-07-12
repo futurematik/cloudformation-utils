@@ -8,6 +8,7 @@ import {
   validateMetadata,
   splitMetadataHeaders,
   resourceProps,
+  writeLog,
 } from '@cfnutil/runtime';
 import { properties, text, optional, bool, array, any } from '@fmtk/validation';
 import { lookup as mime } from 'mime-types';
@@ -63,7 +64,7 @@ async function put(props: PutObjectProps): Promise<ResourceResponse> {
   let data: string | Buffer;
   const [headers, metadata] = splitMetadataHeaders(props.Metadata || {});
 
-  console.log(`put`, props);
+  writeLog(`put`, props);
   const s3 = new S3();
 
   if (props.Source) {
@@ -131,8 +132,7 @@ async function put(props: PutObjectProps): Promise<ResourceResponse> {
     ...headers,
   };
 
-  console.log(`S3 Request`, s3Request);
-
+  writeLog(`S3 Request`, s3Request);
   await s3.putObject(s3Request).promise();
 
   return {
