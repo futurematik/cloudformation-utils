@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { rollupPackage } from './rollupPackage';
 import { addBundleInfoToPackageJson } from './addBundleInfoToPackageJson';
+import { readDotIgnore } from './readDotIgnore';
 
 export interface RollupPackageDirOptions {
   ignorePaths?: string[];
@@ -19,21 +20,10 @@ export async function rollupPackageDir(
 ): Promise<void> {
   const outputPath = opts?.outputPath || 'dist/bundle.zip';
   const fullOutputPath = path.resolve(outputPath);
-  const ignorePaths = opts?.ignorePaths || [];
   const installPackages = opts?.installPackages || [];
 
-  const ignoreFilePath = path.resolve(dirname, '.assetignore');
-  try {
-    const ignoreRules = (
-      await fs.promises.readFile(ignoreFilePath, 'utf8')
-    ).split('\n');
-
-    ignorePaths.push(...ignoreRules);
-  } catch (err) {
-    if (err.code !== 'ENOENT') {
-      throw err;
-    }
-  }
+  const ignorePaths = opts?.ignorePaths || [];
+  ignorePaths.push(...(await readDotIgnore(dirname)));
 
   const rollupConfigPath = opts?.rollupConfigPath || 'rollup.config.js';
 
