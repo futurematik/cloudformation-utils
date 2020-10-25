@@ -1,4 +1,5 @@
 export interface ResourceBase {
+  Condition?: string;
   DeletionPolicy?: string;
   DependsOn?: string[];
 }

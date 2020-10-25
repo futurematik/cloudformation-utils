@@ -9,3 +9,4 @@ dist/
 tsconfig.build.json
 *.tsbuildinfo
 .DS_Store
+coverage/

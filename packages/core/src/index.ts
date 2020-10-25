@@ -28,6 +28,7 @@ export * from './resources/LateBoundToken';
 export * from './resources/makeAsset';
 export * from './resources/makeAssetFromPackage';
 export * from './resources/makeAwsResource';
+export * from './resources/makeCondition';
 export * from './resources/makeDomainAlias';
 export * from './resources/makeIamRole';
 export * from './resources/makeLambdaAssumeRolePolicyDocument';
@@ -42,7 +43,6 @@ export * from './resources/S3ObjectRef';
 export * from './template/Parameter';
 export * from './template/TemplateBuilder';
 export * from './template/TemplateItem';
-export * from './template/TemplateSection';
 
 export * from './util/AWS';
 export * from './util/awsStr';

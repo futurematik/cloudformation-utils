@@ -2,9 +2,11 @@ import { Resource } from '../resources/Resource';
 import { Parameter } from './Parameter';
 import { Asset } from '../resources/Asset';
 import { LateBoundToken } from '../resources/LateBoundToken';
+import { IntrinsicValue } from '../util/Intrinsics';
 
 export enum TemplateItemType {
   Asset = 'Asset',
+  Condition = 'Condition',
   Parameter = 'Parameter',
   Resource = 'Resource',
   Token = 'Token',
@@ -14,6 +16,12 @@ export interface AssetTemplateItem {
   definition: Asset;
   name: string;
   type: TemplateItemType.Asset;
+}
+
+export interface ConditionTemplateItem {
+  definition: IntrinsicValue;
+  name: string;
+  type: TemplateItemType.Condition;
 }
 
 export interface ParameterTemplateItem {
@@ -36,6 +44,7 @@ export interface TokenTemplateItem<T = any> {
 
 export type TemplateItem =
   | AssetTemplateItem
+  | ConditionTemplateItem
   | ResourceTemplateItem
   | ParameterTemplateItem
   | TokenTemplateItem;

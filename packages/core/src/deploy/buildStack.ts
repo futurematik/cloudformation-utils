@@ -59,8 +59,9 @@ export async function buildStack(
     .filter(Boolean)
     .join('.');
 
-  const template: Template = {
+  const template: Required<Template> = {
     AWSTemplateFormatVersion: '2010-09-09',
+    Conditions: {},
     Parameters: {},
     Resources: {},
   };
@@ -108,6 +109,13 @@ export async function buildStack(
           console.error(`asset ${item.name}:`, err);
           throw err;
         }
+        break;
+
+      case TemplateItemType.Condition:
+        template.Conditions[resolveTokens(item.name, tokenMap)] = resolveTokens(
+          item.definition,
+          tokenMap,
+        );
         break;
 
       case TemplateItemType.Parameter:
