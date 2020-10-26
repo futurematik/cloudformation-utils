@@ -29,6 +29,7 @@ export * from './resources/makeAsset';
 export * from './resources/makeAssetFromPackage';
 export * from './resources/makeAwsResource';
 export * from './resources/makeCondition';
+export * from './resources/makeConditions';
 export * from './resources/makeDomainAlias';
 export * from './resources/makeIamRole';
 export * from './resources/makeLambdaAssumeRolePolicyDocument';
