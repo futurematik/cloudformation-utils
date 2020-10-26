@@ -31,7 +31,6 @@
     "unzip-iterable": "^0.1.3"
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "779501fab17b372b4651292ffc7cedc59e55df29"
+    "path": "dist/bundle.zip"
   }
 }

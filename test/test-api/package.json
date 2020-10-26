@@ -18,7 +18,6 @@
     "watch:compile": "node ../../tscWatch.js"
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "5362329ba6137f72b5d47b62f34f2731fb30ddc7"
+    "path": "dist/bundle.zip"
   }
 }

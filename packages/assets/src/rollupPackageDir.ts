@@ -38,7 +38,8 @@ export async function rollupPackageDir(
   }
 
   await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
-  const hash = await rollupPackage({
+
+  await rollupPackage({
     ignore: ignorePaths,
     inputOptions: rollupConfig.default,
     installPackages,
@@ -50,6 +51,5 @@ export async function rollupPackageDir(
 
   await addBundleInfoToPackageJson(dirname, {
     path: outputPath,
-    hash,
   });
 }

@@ -23,7 +23,7 @@ export async function zipDir(
 
   await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
 
-  const hash = await makeZipPackage(
+  await makeZipPackage(
     fullOutputPath,
     getFolderEntries({ source: dirname, ignore: ignorePaths }),
   );
@@ -31,7 +31,6 @@ export async function zipDir(
   if (opts?.packagePath) {
     await addBundleInfoToPackageJson(opts?.packagePath, {
       path: outputPath,
-      hash,
     });
   }
 }

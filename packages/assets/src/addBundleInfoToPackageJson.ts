@@ -5,7 +5,6 @@ const PackageJsonName = 'package.json';
 
 export interface BundleInfo {
   path: string;
-  hash: string;
 }
 
 export async function addBundleInfoToPackageJson(
@@ -19,11 +18,7 @@ export async function addBundleInfoToPackageJson(
 
   const pkg = JSON.parse(await fs.promises.readFile(packageFilePath, 'utf8'));
 
-  if (
-    pkg.bundle &&
-    pkg.bundle.path === info.path &&
-    pkg.bundle.hash === info.hash
-  ) {
+  if (pkg.bundle && pkg.bundle.path === info.path) {
     // don't touch the file if it isn't going to change.
     return;
   }
@@ -32,7 +27,6 @@ export async function addBundleInfoToPackageJson(
     pkg.bundle = {};
   }
   pkg.bundle.path = info.path;
-  pkg.bundle.hash = info.hash;
 
   await fs.promises.writeFile(
     packageFilePath,

@@ -28,8 +28,7 @@
     "aws-sdk": "^2.697.0"
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "215103ccc803fa2a274f3026763c07be200c0f08"
+    "path": "dist/bundle.zip"
   },
   "dependencies": {
     "yazl": "^2.5.1"

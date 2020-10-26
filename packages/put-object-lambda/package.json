@@ -30,7 +30,6 @@
     "mime-types": "^0.1.0"
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "7214976f701bba7900e889b5ee10c41f2cf6f07f"
+    "path": "dist/bundle.zip"
   }
 }

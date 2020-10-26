@@ -41,7 +41,6 @@
     ]
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "3eda7464564a0c0907a9d65a7be8c80f1742d842"
+    "path": "dist/bundle.zip"
   }
 }

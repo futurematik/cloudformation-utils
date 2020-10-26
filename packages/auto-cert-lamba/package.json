@@ -29,7 +29,6 @@
     "aws-sdk": "^2.697.0"
   },
   "bundle": {
-    "path": "dist/bundle.zip",
-    "hash": "1d4492db1014c11e097ebc8af51485058d0760a3"
+    "path": "dist/bundle.zip"
   }
 }
