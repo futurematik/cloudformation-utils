@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "main": "lib/index.js",
   "files": [
     "lib/",
@@ -21,8 +21,8 @@
     "watch:compile": "node ../../tscWatch.js"
   },
   "dependencies": {
-    "@cfnutil/core": "^0.2.13",
-    "@cfnutil/empty-bucket-lambda": "^0.2.10",
+    "@cfnutil/core": "^0.2.14",
+    "@cfnutil/empty-bucket-lambda": "^0.2.11",
     "@fmtk/cfntypes": "^0.3.4"
   }
 }
