@@ -9,11 +9,6 @@ import { HashStream } from '@cfnutil/assets';
 import { AssetManifest } from './AssetManifest';
 import { resolveTokens } from '../util/resolveTokens';
 
-export interface StagingOptions {
-  outputDir: string;
-  version?: string;
-}
-
 export interface BuildStackReporterItem {
   asset?: {
     path: string;
@@ -28,13 +23,22 @@ export interface BuildStackReporter {
   (item: BuildStackReporterItem): void;
 }
 
-export async function buildStack(
-  name: string,
-  builder: TemplateBuilder,
-  options: StagingOptions,
-  reporter?: BuildStackReporter,
-): Promise<string> {
-  await fs.promises.mkdir(options.outputDir, { recursive: true });
+export interface BuildStackOptions {
+  name: string;
+  builder: TemplateBuilder;
+  outputDir: string;
+  reporter?: BuildStackReporter;
+  version?: string;
+}
+
+export async function buildStack({
+  name,
+  builder,
+  outputDir,
+  reporter,
+  version,
+}: BuildStackOptions): Promise<string> {
+  await fs.promises.mkdir(outputDir, { recursive: true });
   const allItems = builder.build();
 
   const tokens = allItems.filter(
@@ -51,11 +55,11 @@ export async function buildStack(
     (x) => x.type !== TemplateItemType.Token,
   );
 
-  const templateName = [name, options.version, 'template.json']
+  const templateName = [name, version, 'template.json']
     .filter(Boolean)
     .join('.');
 
-  const manifestName = [name, options.version, 'manifest.json']
+  const manifestName = [name, version, 'manifest.json']
     .filter(Boolean)
     .join('.');
 
@@ -90,12 +94,12 @@ export async function buildStack(
           const assetPath = await stageAsset(
             item.name,
             item.definition,
-            options,
+            outputDir,
           );
           manifest.assets[item.name] = assetPath;
 
           if (reporter) {
-            const assetFullPath = path.join(options.outputDir, assetPath);
+            const assetFullPath = path.join(outputDir, assetPath);
 
             reporter({
               current: item.name,
@@ -137,7 +141,7 @@ export async function buildStack(
     }
   }
 
-  const templatePath = path.join(options.outputDir, templateName);
+  const templatePath = path.join(outputDir, templateName);
   await fs.promises.writeFile(templatePath, JSON.stringify(template, null, 2));
 
   if (reporter) {
@@ -150,7 +154,7 @@ export async function buildStack(
     });
   }
 
-  const manifestPath = path.join(options.outputDir, manifestName);
+  const manifestPath = path.join(outputDir, manifestName);
   await fs.promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
   if (reporter) {
@@ -166,11 +170,11 @@ export async function buildStack(
   return manifestPath;
 }
 
-async function stageAsset(name: string, asset: Asset, options: StagingOptions) {
+async function stageAsset(name: string, asset: Asset, outputDir: string) {
   const assetOutput = await asset.generate();
 
   const outPath = path.join(
-    options.outputDir,
+    outputDir,
     sanitizeFilename(name + path.extname(assetOutput.fileName)),
   );
 

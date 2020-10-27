@@ -5,8 +5,9 @@ import { assertValid, ValidationMode, ExtraFieldsMode } from '@fmtk/validation';
 export async function downloadManifest(
   bucket: string,
   key: string,
+  region?: string,
 ): Promise<AssetManifest> {
-  const s3 = new S3();
+  const s3 = new S3({ region });
 
   const stream = s3.getObject({ Bucket: bucket, Key: key }).createReadStream();
   const chunks: Buffer[] = [];

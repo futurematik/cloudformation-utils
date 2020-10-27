@@ -17,11 +17,19 @@ export interface UploadProgressReporter {
   (progress: UploadProgress): void;
 }
 
-export async function uploadStack(
-  manifestPath: string,
-  bucket: string,
-  report?: UploadProgressReporter,
-): Promise<void> {
+export interface UploadStackOptions {
+  manifestPath: string;
+  bucket: string;
+  region?: string;
+  report?: UploadProgressReporter;
+}
+
+export async function uploadStack({
+  manifestPath,
+  bucket,
+  region,
+  report,
+}: UploadStackOptions): Promise<void> {
   const manifestDir = path.dirname(manifestPath);
 
   const manifest = assertValid(
@@ -34,7 +42,7 @@ export async function uploadStack(
   );
 
   const templatePath = path.resolve(manifestDir, manifest.template);
-  const s3 = new S3();
+  const s3 = new S3({ region });
 
   await Promise.all([
     uploadFile(manifestPath, bucket, s3, report),

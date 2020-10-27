@@ -20,12 +20,21 @@ export interface ChangeSetReporter {
   (resource: ChangeSetReporterResource | true): void;
 }
 
-export async function executeChangeSet(
-  stackName: string,
-  changeSetId: string,
-  reporter?: ChangeSetReporter,
-  cfn = new CloudFormation(),
-): Promise<boolean> {
+export interface ExecuteChangesetOptions {
+  stackName: string;
+  changeSetId: string;
+  region?: string;
+  reporter?: ChangeSetReporter;
+  cfn?: CloudFormation;
+}
+
+export async function executeChangeSet({
+  stackName,
+  changeSetId,
+  region,
+  reporter,
+  cfn = new CloudFormation({ region }),
+}: ExecuteChangesetOptions): Promise<boolean> {
   const changeset = await waitForChangeSetReady(
     stackName,
     changeSetId,

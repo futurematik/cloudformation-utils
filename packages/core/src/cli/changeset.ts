@@ -13,6 +13,7 @@ export interface ChangesetOptions {
   execute?: boolean;
   manifestKey?: string;
   name: string;
+  region?: string;
   stackVersion: string;
   params?: ChangeSetParameterMap;
 }
@@ -28,6 +29,7 @@ export async function runChangesetCommand(
     stackName: options.name,
     version: options.stackVersion,
     parameters: options.params,
+    region: options.region,
   });
   console.log(`Created changeset ${changeSet.Id}\n`);
 
@@ -35,6 +37,7 @@ export async function runChangesetCommand(
     return await runExecuteCommand({
       id: changeSet.Id as string,
       name: changeSet.StackId as string,
+      region: options.region,
     });
   }
 }
@@ -53,6 +56,7 @@ export function makeChangesetCommand(
         'name of the stack',
         cmdOpts.defaultStackName,
       )
+      .option('--region <region>', 'AWS region')
       .option(
         '-s, --set <key=value>',
         'Set a parameter',

@@ -6,20 +6,22 @@ import {
   convertParameters,
 } from './ChangeSetParameterMap';
 
-export interface ChangeSetOptions {
+export interface CreateChangeSetOptions {
   stackName: string;
   version: string;
   bucketName: string;
   manifestKey: string;
   parameters?: ChangeSetParameterMap;
+  region?: string;
 }
 
 export async function createChangeSet(
-  options: ChangeSetOptions,
+  options: CreateChangeSetOptions,
 ): Promise<CloudFormation.CreateChangeSetOutput> {
   const manifest = await downloadManifest(
     options.bucketName,
     options.manifestKey,
+    options.region,
   );
 
   const params = options.parameters
@@ -37,7 +39,7 @@ export async function createChangeSet(
     });
   }
 
-  const cfn = new CloudFormation();
+  const cfn = new CloudFormation({ region: options.region });
 
   return await cfn
     .createChangeSet({

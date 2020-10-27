@@ -9,16 +9,18 @@ export interface ExecuteCommandOptions {
 export interface ExecuteOptions {
   id: string;
   name: string;
+  region?: string;
 }
 
 export async function runExecuteCommand(
   options: ExecuteOptions,
 ): Promise<void> {
-  const success = await executeChangeSet(
-    options.name,
-    options.id,
-    makeChangeSetReporter(),
-  );
+  const success = await executeChangeSet({
+    stackName: options.name,
+    changeSetId: options.id,
+    reporter: makeChangeSetReporter(),
+    region: options.region,
+  });
   if (!success) {
     process.exit(1);
   }
@@ -36,6 +38,7 @@ export function makeExecuteCommand(
         'name of the stack',
         cmdOpts.defaultStackName,
       )
+      .option('--region <region>', 'AWS region')
       .action(runExecuteCommand) as Command;
   };
 }

@@ -75,7 +75,7 @@ exports.handler = (event, context, callback) => {
   });
 };`,
       },
-      FunctionName: 'ViewerRequestFn',
+      FunctionName: `${name}ViewerRequestFn`,
       Handler: 'index.handler',
       Region: 'us-east-1',
       Role: testFuncRole.out.Arn,
