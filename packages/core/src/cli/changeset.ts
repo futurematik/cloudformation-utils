@@ -1,5 +1,8 @@
 import { Command } from 'commander';
-import { createChangeSet } from '../deploy/createChangeSet';
+import {
+  ChangeSetParameterFactory,
+  createChangeSet,
+} from '../deploy/createChangeSet';
 import { setParam } from './setParam';
 import { runExecuteCommand } from './execute';
 import { ChangeSetParameterMap } from '../deploy/ChangeSetParameterMap';
@@ -15,7 +18,7 @@ export interface ChangesetOptions {
   name: string;
   region?: string;
   stackVersion: string;
-  params?: ChangeSetParameterMap;
+  params?: ChangeSetParameterMap | ChangeSetParameterFactory;
 }
 
 export async function runChangesetCommand(
