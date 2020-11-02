@@ -61,8 +61,8 @@ export const Intrinsics = {
    *
    * @see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-equals
    */
-  equals(...conditions: IntrinsicValue[]): IntrinsicValue {
-    return { 'Fn::Equals': conditions };
+  equals(value1: IntrinsicValue, value2: IntrinsicValue): IntrinsicValue {
+    return { 'Fn::Equals': [value1, value2] };
   },
 
   /**

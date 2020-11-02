@@ -18,7 +18,7 @@ export function makeConditions<P extends string>(
 ): [TemplateBuilder, ConditionsOutput<P>] {
   return [
     makeTemplateBuilder(
-      Object.entries(spec).map(([name, def]) => makeCondition(name, def)),
+      Object.entries(spec).map(([name, def]) => makeCondition(name, def)[0]),
     ),
     Object.fromEntries(
       Object.keys(spec).map((x) => [x, x]),

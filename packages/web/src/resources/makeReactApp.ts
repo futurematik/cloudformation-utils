@@ -6,15 +6,16 @@ import {
   makeDomainAlias,
   ItemOrBuilder,
   ResourceAttributes,
-  filterFalsey,
   S3ObjectRef,
   TemplateBuilder,
   makeTemplateBuilder,
+  makeCondition,
+  Intrinsics,
 } from '@cfnutil/core';
 import { EmptyBucketResource } from '@cfnutil/empty-bucket';
 import { PutObjectResource } from '@cfnutil/put-object';
 import { UnpackAssetResource } from '@cfnutil/unpack-asset';
-import { AutoCertResource, AutoCertAttributes } from '@cfnutil/auto-cert';
+import { AutoCertResource } from '@cfnutil/auto-cert';
 import {
   ResourceType,
   S3BucketAttributes,
@@ -58,7 +59,7 @@ export interface ReactAppFactory {
 }
 
 export function makeReactAppFactory(dep: {
-  autoCert?: AutoCertResource;
+  autoCert: AutoCertResource;
   emptyBucket: EmptyBucketResource;
   putObject?: PutObjectResource;
   unpackAsset: UnpackAssetResource;
@@ -140,26 +141,28 @@ export function makeReactAppFactory(dep: {
         },
       );
 
-      let certificateArn = props.CertificateArn;
-      let certificateBuilder: ItemOrBuilder | undefined;
+      const [certConditionBuilder, certCondition] = makeCondition(
+        `${name}ProvisionCert`,
+        Intrinsics.equals(props.CertificateArn, ''),
+      );
 
-      if (!certificateArn) {
-        let certificate: ResourceAttributes<AutoCertAttributes>;
+      const [certificateBuilder, certificate] = dep.autoCert.makeResource(
+        `${name}Certificate`,
+        {
+          DomainName: props.DomainName,
+          HostedZoneId: props.HostedZoneId,
+          Region: 'us-east-1',
+        },
+        {
+          Condition: certCondition.name,
+        },
+      );
 
-        if (!dep.autoCert) {
-          throw new Error(`must provide CertificateArn or AutoCertResource`);
-        }
-
-        [certificateBuilder, certificate] = dep.autoCert.makeResource(
-          `${name}Certificate`,
-          {
-            DomainName: props.DomainName,
-            HostedZoneId: props.HostedZoneId,
-            Region: 'us-east-1',
-          },
-        );
-        certificateArn = certificate.out.CertificateArn;
-      }
+      const certificateArn = Intrinsics.ifThen(
+        certCondition.name,
+        certificate.out.CertificateArn,
+        props.CertificateArn,
+      );
 
       const configBuilders: ItemOrBuilder[] = [];
 
@@ -253,19 +256,18 @@ export function makeReactAppFactory(dep: {
       });
 
       return [
-        makeTemplateBuilder(
-          filterFalsey([
-            bucketBuilder,
-            certificateBuilder,
-            emptyBucketBuilder,
-            unpackAssetBuilder,
-            ...configBuilders,
-            oaiBuilder,
-            distributionBuilder,
-            bucketPolicyBuilder,
-            domainAliasBuilder,
-          ]),
-        ),
+        makeTemplateBuilder([
+          bucketBuilder,
+          certConditionBuilder,
+          certificateBuilder,
+          emptyBucketBuilder,
+          unpackAssetBuilder,
+          ...configBuilders,
+          oaiBuilder,
+          distributionBuilder,
+          bucketPolicyBuilder,
+          domainAliasBuilder,
+        ]),
         {
           Bucket: bucket,
           CertificateArn: certificateArn as string,
