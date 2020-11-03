@@ -6,8 +6,5 @@ export async function stackExists(
   cloudFormation = new CloudFormation(),
 ): Promise<boolean> {
   const stack = await getStackInfo(name, cloudFormation);
-  return (
-    !!stack &&
-    !['REVIEW_IN_PROGRESS', 'DELETE_COMPLETE'].includes(stack.StackStatus)
-  );
+  return !!stack;
 }
