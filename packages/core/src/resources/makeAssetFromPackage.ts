@@ -15,7 +15,9 @@ export function makeAssetFromPackage(
       resolveRoot,
     );
     if (!packagePath) {
-      throw new Error(`can't find package file`);
+      throw new Error(
+        `can't find package file for ${packageName} from ${resolveRoot}`,
+      );
     }
 
     const pkg = JSON.parse(await fs.promises.readFile(packagePath, 'utf8'));
