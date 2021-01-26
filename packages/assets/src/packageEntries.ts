@@ -81,7 +81,7 @@ export async function* packageEntries({
     stdio: 'inherit',
   });
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     proc.on('close', (code) => {
       if (code === 0) {
         resolve();

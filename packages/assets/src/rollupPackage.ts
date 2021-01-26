@@ -75,7 +75,7 @@ async function runSmokeTest(
     stdio: 'inherit',
   });
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     result.on('close', (code) => {
       if (code !== 0) {
         reject(new Error(`smoke test failed with exit code ${code}`));
