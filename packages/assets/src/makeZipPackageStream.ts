@@ -35,6 +35,6 @@ export async function makeZipPackageStream(
     zip.append(content, { name: entry.archivePath, date: new Date(0) });
   }
 
-  await zip.finalize();
+  void zip.finalize();
   return zip;
 }
