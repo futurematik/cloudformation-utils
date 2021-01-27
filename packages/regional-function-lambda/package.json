@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/regional-function-lambda",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,
@@ -23,7 +23,7 @@
     "dist/"
   ],
   "devDependencies": {
-    "@cfnutil/assets": "^0.3.0",
+    "@cfnutil/assets": "^0.3.1",
     "@cfnutil/runtime": "^0.2.5",
     "aws-sdk": "^2.697.0"
   },
