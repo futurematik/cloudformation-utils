@@ -1,30 +1,19 @@
+import { AutoCertResource } from '@cfnutil/auto-cert';
 import {
-  makeAwsResource,
-  bucketArn,
-  makePolicyDocument,
-  PolicyEffect,
-  makeDomainAlias,
-  ItemOrBuilder,
   ResourceAttributes,
   S3ObjectRef,
   TemplateBuilder,
-  makeTemplateBuilder,
-  makeCondition,
-  Intrinsics,
 } from '@cfnutil/core';
 import { EmptyBucketResource } from '@cfnutil/empty-bucket';
 import { PutObjectResource } from '@cfnutil/put-object';
+import { Metadata } from '@cfnutil/runtime';
 import { UnpackAssetResource } from '@cfnutil/unpack-asset';
-import { AutoCertResource } from '@cfnutil/auto-cert';
 import {
-  ResourceType,
-  S3BucketAttributes,
   CloudFrontDistributionAttributes,
   CloudFrontDistributionLambdaFunctionAssociation,
+  S3BucketAttributes,
 } from '@fmtk/cfntypes';
-import { makeOaiArn } from '../util/makeOaiArn';
-import { makeCloudFrontAliasTarget } from '../util/makeCloudFrontAliasTarget';
-import { Metadata } from '@cfnutil/runtime';
+import { makeStaticWebAppFactory } from './makeStaticWebApp';
 
 export interface ConfigFile {
   CacheControl?: string;
@@ -64,216 +53,41 @@ export function makeReactAppFactory(dep: {
   putObject?: PutObjectResource;
   unpackAsset: UnpackAssetResource;
 }): ReactAppFactory {
+  const factory = makeStaticWebAppFactory(dep);
+
   return {
     makeResource(
       name: string,
       props: ReactAppProps,
     ): [TemplateBuilder, ReactAppAttributes] {
-      const [bucketBuilder, bucket] = makeAwsResource(
-        ResourceType.S3Bucket,
-        `${name}Content`,
-        {
-          WebsiteConfiguration: {
-            IndexDocument: 'index.html',
+      return factory.makeResource(name, {
+        CustomErrorResponses: [
+          // enable client-side routing
+          {
+            ErrorCode: 404,
+            ResponseCode: 200,
+            ResponsePagePath: '/index.html',
           },
-        },
-      );
+        ],
 
-      const [emptyBucketBuilder, emptyBucket] = dep.emptyBucket.makeResource(
-        `${name}Empty`,
-        {
-          Bucket: bucket.ref,
-          EmptyOnDelete: true,
-        },
-      );
+        DefaultRootObject: 'index.html',
 
-      const [unpackAssetBuilder, unpackAsset] = dep.unpackAsset.makeResource(
-        `${name}UnpackAssets`,
-        {
-          DestinationBucket: bucket.ref,
-          Source: props.Source,
-          Metadata: [
-            // static stuff never changes (all versioned files); cache forever
-            // (1 year is max allowed)
-            {
-              Glob: 'static/**/*',
-              Metadata: { 'cache-control': 'public, max-age=31536000' },
-            },
-            // root folder stuff doesn't have versioned file names; don't cache
-            {
-              Glob: '*',
-              Metadata: { 'cache-control': 'no-cache, max-age=0' },
-            },
-          ],
-        },
-        {
-          DependsOn: [emptyBucket.name],
-        },
-      );
-
-      const [oaiBuilder, oai] = makeAwsResource(
-        ResourceType.CloudFrontCloudFrontOriginAccessIdentity,
-        `${name}AccessIdentity`,
-        {
-          CloudFrontOriginAccessIdentityConfig: { Comment: bucket.ref },
-        },
-      );
-
-      const [bucketPolicyBuilder] = makeAwsResource(
-        ResourceType.S3BucketPolicy,
-        `${name}BucketPolicy`,
-        {
-          Bucket: bucket.ref,
-          PolicyDocument: makePolicyDocument(
-            {
-              Action: ['s3:GetObject*'],
-              Effect: PolicyEffect.Allow,
-              Resource: [bucketArn(bucket.ref, '*')],
-              Principal: { CanonicalUser: oai.out.S3CanonicalUserId },
-            },
-            {
-              Action: ['s3:GetBucket*', 's3:ListBucket*'],
-              Effect: PolicyEffect.Allow,
-              Resource: [bucketArn(bucket.ref)],
-              Principal: { CanonicalUser: oai.out.S3CanonicalUserId },
-            },
-          ),
-        },
-      );
-
-      const [certConditionBuilder, certCondition] = makeCondition(
-        `${name}ProvisionCert`,
-        Intrinsics.equals(props.CertificateArn, ''),
-      );
-
-      const [certificateBuilder, certificate] = dep.autoCert.makeResource(
-        `${name}Certificate`,
-        {
-          DomainName: props.DomainName,
-          HostedZoneId: props.HostedZoneId,
-          Region: 'us-east-1',
-        },
-        {
-          Condition: certCondition.name,
-        },
-      );
-
-      const certificateArn = Intrinsics.ifThen(
-        certCondition.name,
-        certificate.out.CertificateArn,
-        props.CertificateArn,
-      );
-
-      const configBuilders: ItemOrBuilder[] = [];
-
-      if (props.Config) {
-        if (!dep.putObject) {
-          throw new Error(`Config specified without PutObjectResource`);
-        }
-
-        const configs = Array.isArray(props.Config)
-          ? props.Config
-          : [props.Config];
-
-        for (let i = 0; i < configs.length; ++i) {
-          const config = configs[i];
-
-          const meta: Metadata = {
-            'cache-control': config.CacheControl || 'no-cache, max-age=0',
-          };
-          if (config.ContentType) {
-            meta['content-type'] = config.ContentType;
-          }
-
-          const [builder] = dep.putObject.makeResource(
-            `${name}Config${i}`,
-            {
-              Contents: config.Contents,
-              Metadata: {
-                ...meta,
-                ...config.Metadata,
-              },
-              Target: {
-                S3Bucket: bucket.ref,
-                S3Key: config.FileName,
-              },
-            },
-            {
-              DependsOn: [emptyBucket.name, unpackAsset.name],
-            },
-          );
-          configBuilders.push(builder);
-        }
-      }
-
-      const [distributionBuilder, distribution] = makeAwsResource(
-        ResourceType.CloudFrontDistribution,
-        `${name}CloudFrontDistribution`,
-        {
-          DistributionConfig: {
-            Aliases: [props.DomainName],
-            Enabled: true,
-            IPV6Enabled: props.EnableIpv6,
-            Origins: [
-              {
-                DomainName: bucket.out.RegionalDomainName,
-                Id: 'S3Origin',
-                S3OriginConfig: {
-                  OriginAccessIdentity: makeOaiArn(oai.ref),
-                },
-              },
-            ],
-            PriceClass: props.PriceClass || 'PriceClass_100',
-            CustomErrorResponses: [
-              {
-                ErrorCode: 404,
-                ResponseCode: 200,
-                ResponsePagePath: '/index.html',
-              },
-            ],
-            DefaultRootObject: 'index.html',
-            DefaultCacheBehavior: {
-              ForwardedValues: {
-                QueryString: false,
-              },
-              LambdaFunctionAssociations: props.LambdaFunctionAssociations,
-              TargetOriginId: 'S3Origin',
-              ViewerProtocolPolicy: 'redirect-to-https',
-            },
-            ViewerCertificate: {
-              AcmCertificateArn: certificateArn,
-              SslSupportMethod: 'sni-only',
-            },
+        Metadata: [
+          // static stuff never changes (all versioned files); cache forever
+          // (1 year is max allowed)
+          {
+            Glob: 'static/**/*',
+            Metadata: { 'cache-control': 'public, max-age=31536000' },
           },
-        },
-      );
+          // root folder stuff doesn't have versioned file names; don't cache
+          {
+            Glob: '*',
+            Metadata: { 'cache-control': 'no-cache, max-age=0' },
+          },
+        ],
 
-      const [domainAliasBuilder] = makeDomainAlias(`${name}Alias`, {
-        Target: makeCloudFrontAliasTarget(distribution.out.DomainName),
-        HostedZoneId: props.HostedZoneId,
-        Name: props.DomainName,
-        EnableIpv6: props.EnableIpv6,
+        ...props,
       });
-
-      return [
-        makeTemplateBuilder([
-          bucketBuilder,
-          certConditionBuilder,
-          certificateBuilder,
-          emptyBucketBuilder,
-          unpackAssetBuilder,
-          ...configBuilders,
-          oaiBuilder,
-          distributionBuilder,
-          bucketPolicyBuilder,
-          domainAliasBuilder,
-        ]),
-        {
-          Bucket: bucket,
-          CertificateArn: certificateArn as string,
-          Distribution: distribution,
-        },
-      ];
     },
   };
 }
