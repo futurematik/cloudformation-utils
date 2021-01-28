@@ -8,6 +8,7 @@
     "clean": "lerna run clean",
     "compile": "FORCE_COLOR=1 lerna run compile --stream",
     "lint": "FORCE_COLOR=1 lerna run --parallel lint",
+    "testdeploy": "yarn workspace @cfnutil-test/deploy-cra-test start",
     "watch:compile": "FORCE_COLOR=1 lerna run --parallel watch:compile"
   },
   "workspaces": {
