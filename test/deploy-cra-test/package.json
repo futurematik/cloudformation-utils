@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil-test/deploy-cra-test",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "private": true,
   "dependencies": {
     "@cfnutil-test/cra-test": "^0.2.14",
@@ -11,7 +11,7 @@
     "@cfnutil/put-object": "^0.3.6",
     "@cfnutil/regional-function": "^0.3.6",
     "@cfnutil/unpack-asset": "^0.3.6",
-    "@cfnutil/web": "^0.3.6",
+    "@cfnutil/web": "^0.3.7",
     "@fmtk/async-main": "^0.1.1",
     "@fmtk/cfntypes": "^0.3.4",
     "@fmtk/validation": "^3.5.3",
