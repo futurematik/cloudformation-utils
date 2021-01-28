@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.2.23",
+  "version": "0.2.24",
   "main": "lib/index.js",
   "files": [
     "lib/",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@cfnutil/auto-cert-lambda": "^0.2.13",
-    "@cfnutil/core": "^0.3.5",
+    "@cfnutil/core": "^0.3.6",
     "@fmtk/cfntypes": "^0.3.4"
   }
 }
