@@ -19,7 +19,7 @@
     "@cfnutil/assets": "^0.3.2"
   },
   "scripts": {
-    "build": "react-scripts build && yarn bundle",
+    "build": "react-scripts build",
     "bundle": "cfn-asset content --source build/",
     "eject": "react-scripts eject",
     "start": "react-scripts start",

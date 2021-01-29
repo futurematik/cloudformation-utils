@@ -1,15 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "build": "FORCE_COLOR=1 lerna run build --stream",
-    "bundle": "FORCE_COLOR=1 lerna run bundle --parallel --stream",
+    "build": "yarn clean && yarn compile && yarn buildsub && yarn lint && yarn bundle",
+    "buildsub": "lerna run build --stream",
+    "bundle": "lerna run bundle --parallel --stream",
     "cdk": "yarn workspace test-deploy cdk",
-    "clean-npm": "find . -name node_modules -type d -prune -exec rm -rf {} \\;",
-    "clean": "lerna run clean",
-    "compile": "FORCE_COLOR=1 lerna run compile --stream",
-    "lint": "FORCE_COLOR=1 lerna run --parallel lint",
+    "clean-npm": "rimraf node_modules/ 'packages/*/node_modules/'",
+    "clean": "rimraf build/ dist/ 'packages/*/build/' 'packages/*/dist' 'packages/*/lib' 'packages/*/*.tsbuildinfo' 'test/*/build/' 'test/*/dist' 'test/*/lib' 'test/*/*.tsbuildinfo'",
+    "compile": "node tsbuild.js",
+    "lint": "lerna run --parallel lint",
     "testdeploy": "yarn workspace @cfnutil-test/deploy-cra-test start",
-    "watch:compile": "FORCE_COLOR=1 lerna run --parallel watch:compile"
+    "watch:compile": "node tsbuild.js --watch --incremental"
   },
   "workspaces": {
     "packages": [
@@ -43,6 +44,7 @@
     "esm": "^3.2.25",
     "lerna": "^3.22.1",
     "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "rollup": "^2.18.2",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-sourcemaps": "^0.6.2",

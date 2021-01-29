@@ -9,7 +9,7 @@
       "script": "watch:compile",
       "group": "build",
       "isBackground": true,
-      "problemMatcher": [],
+      "problemMatcher": ["$tsc-watch"],
       "presentation": {
         "echo": true,
         "reveal": "always",

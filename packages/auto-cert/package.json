@@ -14,11 +14,9 @@
     "src/"
   ],
   "scripts": {
-    "build": "yarn clean && yarn compile && yarn lint",
-    "clean": "rm -rf lib/ dist/",
+    "clean": "rimraf lib/ dist/",
     "compile": "tsc",
-    "lint": "eslint src/ --ext=ts,tsx",
-    "watch:compile": "node ../../tscWatch.js"
+    "lint": "eslint src/ --ext=ts,tsx"
   },
   "dependencies": {
     "@cfnutil/auto-cert-lambda": "^0.2.13",

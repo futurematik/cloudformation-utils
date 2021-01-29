@@ -20,11 +20,9 @@
     "minimist": "^1.2.5"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile && yarn lint",
-    "clean": "rm -rf lib/ dist/",
+    "build": "yarn compile",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx",
-    "start": "node -r esm -r ts-node/register src/index.ts",
-    "watch:compile": "node ../../tscWatch.js"
+    "start": "node -r esm -r ts-node/register src/index.ts"
   }
 }

@@ -10,12 +10,10 @@
   "version": "0.2.13",
   "main": "lib/index.js",
   "scripts": {
-    "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
     "bundle": "cfn-asset rollup --smoke-test",
-    "clean": "rm -rf lib/ dist/",
+    "clean": "rimraf lib/ dist/",
     "compile": "tsc",
-    "lint": "eslint src/ --ext=ts,tsx",
-    "watch:compile": "node ../../tscWatch.js"
+    "lint": "eslint src/ --ext=ts,tsx"
   },
   "files": [
     "lib/",

@@ -10,12 +10,10 @@
     "@cfnutil/assets": "^0.3.2"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile && yarn lint && yarn bundle",
+    "build": "yarn compile",
     "bundle": "cfn-asset rollup --package-install-image node:alpine",
-    "clean": "rm -rf lib/ dist/",
     "compile": "tsc",
-    "lint": "eslint src/ --ext=ts,tsx",
-    "watch:compile": "node ../../tscWatch.js"
+    "lint": "eslint src/ --ext=ts,tsx"
   },
   "bundle": {
     "path": "dist/bundle.zip"
