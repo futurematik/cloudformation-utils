@@ -1,32 +1,32 @@
+import { AutoCertResource } from '@cfnutil/auto-cert';
 import {
-  makeAwsResource,
+  AWS,
   bucketArn,
-  makePolicyDocument,
-  PolicyEffect,
+  Intrinsics,
+  makeAwsResource,
+  makeCondition,
   makeDomainAlias,
-  ItemOrBuilder,
+  makePolicyDocument,
+  makeTemplateBuilder,
+  PolicyEffect,
   ResourceAttributes,
   S3ObjectRef,
   TemplateBuilder,
-  makeTemplateBuilder,
-  makeCondition,
-  Intrinsics,
-  AWS,
 } from '@cfnutil/core';
 import { EmptyBucketResource } from '@cfnutil/empty-bucket';
 import { PutObjectResource } from '@cfnutil/put-object';
+import { Metadata, MetadataGlob } from '@cfnutil/runtime';
 import { UnpackAssetResource } from '@cfnutil/unpack-asset';
-import { AutoCertResource } from '@cfnutil/auto-cert';
 import {
+  CloudFrontDistributionAttributes,
+  CloudFrontDistributionCustomErrorResponse,
+  CloudFrontDistributionLambdaFunctionAssociation,
   ResourceType,
   S3BucketAttributes,
-  CloudFrontDistributionAttributes,
-  CloudFrontDistributionLambdaFunctionAssociation,
-  CloudFrontDistributionCustomErrorResponse,
 } from '@fmtk/cfntypes';
-import { makeOaiArn } from '../util/makeOaiArn';
 import { makeCloudFrontAliasTarget } from '../util/makeCloudFrontAliasTarget';
-import { Metadata, MetadataGlob } from '@cfnutil/runtime';
+import { makeOaiArn } from '../util/makeOaiArn';
+import { makeContentBucketFactory } from './makeContentBucket';
 
 export interface ConfigFile {
   CacheControl?: string;
@@ -69,36 +69,22 @@ export function makeStaticWebAppFactory(dep: {
   putObject?: PutObjectResource;
   unpackAsset: UnpackAssetResource;
 }): StaticWebAppFactory {
+  const bucketFactory = makeContentBucketFactory({
+    emptyBucket: dep.emptyBucket,
+    unpackAsset: dep.unpackAsset,
+    putObject: dep.putObject,
+  });
+
   return {
     makeResource(
       name: string,
       props: StaticWebAppProps,
     ): [TemplateBuilder, StaticWebAppAttributes] {
-      const [bucketBuilder, bucket] = makeAwsResource(
-        ResourceType.S3Bucket,
-        `${name}Content`,
-        {},
-      );
-
-      const [emptyBucketBuilder, emptyBucket] = dep.emptyBucket.makeResource(
-        `${name}Empty`,
-        {
-          Bucket: bucket.ref,
-          EmptyOnDelete: true,
-        },
-      );
-
-      const [unpackAssetBuilder, unpackAsset] = dep.unpackAsset.makeResource(
-        `${name}UnpackAssets`,
-        {
-          DestinationBucket: bucket.ref,
-          Source: props.Source,
-          Metadata: props.Metadata,
-        },
-        {
-          DependsOn: [emptyBucket.name],
-        },
-      );
+      const [bucketBuilder, bucket] = bucketFactory.makeResource(name, {
+        Source: props.Source,
+        Config: props.Config,
+        Metadata: props.Metadata,
+      });
 
       const [oaiBuilder, oai] = makeAwsResource(
         ResourceType.CloudFrontCloudFrontOriginAccessIdentity,
@@ -153,48 +139,6 @@ export function makeStaticWebAppFactory(dep: {
         props.CertificateArn ?? AWS.NoValue,
       );
 
-      const configBuilders: ItemOrBuilder[] = [];
-
-      if (props.Config) {
-        if (!dep.putObject) {
-          throw new Error(`Config specified without PutObjectResource`);
-        }
-
-        const configs = Array.isArray(props.Config)
-          ? props.Config
-          : [props.Config];
-
-        for (let i = 0; i < configs.length; ++i) {
-          const config = configs[i];
-
-          const meta: Metadata = {
-            'cache-control': config.CacheControl || 'no-cache, max-age=0',
-          };
-          if (config.ContentType) {
-            meta['content-type'] = config.ContentType;
-          }
-
-          const [builder] = dep.putObject.makeResource(
-            `${name}Config${i}`,
-            {
-              Contents: config.Contents,
-              Metadata: {
-                ...meta,
-                ...config.Metadata,
-              },
-              Target: {
-                S3Bucket: bucket.ref,
-                S3Key: config.FileName,
-              },
-            },
-            {
-              DependsOn: [emptyBucket.name, unpackAsset.name],
-            },
-          );
-          configBuilders.push(builder);
-        }
-      }
-
       const [distributionBuilder, distribution] = makeAwsResource(
         ResourceType.CloudFrontDistribution,
         `${name}CloudFrontDistribution`,
@@ -243,9 +187,6 @@ export function makeStaticWebAppFactory(dep: {
           bucketBuilder,
           certConditionBuilder,
           certificateBuilder,
-          emptyBucketBuilder,
-          unpackAssetBuilder,
-          ...configBuilders,
           oaiBuilder,
           distributionBuilder,
           bucketPolicyBuilder,
