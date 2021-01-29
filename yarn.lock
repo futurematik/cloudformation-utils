@@ -1227,10 +1227,10 @@
   resolved "https://registry.npmjs.org/@fmtk/async-main/-/async-main-0.1.1.tgz#27bbd47876c5a34e75d484edd4966480727bbb31"
   integrity sha512-dBHNMn4eoATGf/Ue/Wk4zq2Rx+jKNitd7JcUEg/952wBEPDbUYr3SbCvjcqSM7OXt8sjro/3spl8MeFOp6kyGQ==
 
-"@fmtk/cfntypes@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.npmjs.org/@fmtk/cfntypes/-/cfntypes-0.3.4.tgz#94af46bd5b7b338115f051babcf3b762545fdb0b"
-  integrity sha512-nBjoi3tSasnf3MR+JfQPM8Z1k2OB4OxPFsbt2AwGWQVi/m6lAfxHYIwpMuK7w+DfJvI9AmSiW7otq9eennnYoQ==
+"@fmtk/cfntypes@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.npmjs.org/@fmtk/cfntypes/-/cfntypes-0.11.1.tgz#26680253c0c34a7f8422c29a2d78ccd93174c90a"
+  integrity sha512-OSW1jShZGI4ecJV8Gdp00HueTsXIteYq6Qbs/k/QMUIhbRiJXH4Ow+xk9xJSd47bDv1Y4SGDP5OMhazBLy8eww==
 
 "@fmtk/validation@^3.5.3":
   version "3.5.3"

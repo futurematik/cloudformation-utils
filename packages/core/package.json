@@ -23,7 +23,7 @@
   "dependencies": {
     "@cfnutil/assets": "^0.3.2",
     "@cfnutil/runtime": "^0.2.5",
-    "@fmtk/cfntypes": "^0.3.4",
+    "@fmtk/cfntypes": "^0.11.1",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.705.0",
     "chalk": "^4.1.0",

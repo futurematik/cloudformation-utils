@@ -14,7 +14,7 @@ export function makeIamRole(
   name: string,
   props: IAMRoleProps,
   options?: ResourceBase,
-): [ResourceTemplateItem<ResourceType.IAMRole, IAMRoleProps>, IamRole] {
+): [ResourceTemplateItem<typeof ResourceType.IAMRole, IAMRoleProps>, IamRole] {
   let policy: Policy | undefined;
 
   const [resource, attribs] = makeAwsResource(

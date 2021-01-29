@@ -27,6 +27,6 @@
     "@cfnutil/put-object": "^0.3.6",
     "@cfnutil/runtime": "^0.2.5",
     "@cfnutil/unpack-asset": "^0.3.6",
-    "@fmtk/cfntypes": "^0.3.4"
+    "@fmtk/cfntypes": "^0.11.1"
   }
 }

@@ -31,7 +31,6 @@ export * from './resources/makeAwsResource';
 export * from './resources/makeCondition';
 export * from './resources/makeConditions';
 export * from './resources/makeDomainAlias';
-export * from './resources/makeIamRole';
 export * from './resources/makeLambdaAssumeRolePolicyDocument';
 export * from './resources/makeLateBoundToken';
 export * from './resources/makeParameter';

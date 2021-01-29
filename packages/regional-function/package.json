@@ -24,6 +24,6 @@
     "@cfnutil/core": "^0.3.6",
     "@cfnutil/regional-function-lambda": "^0.2.13",
     "@cfnutil/runtime": "^0.2.5",
-    "@fmtk/cfntypes": "^0.3.4"
+    "@fmtk/cfntypes": "^0.11.1"
   }
 }
