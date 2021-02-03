@@ -6,22 +6,14 @@ import {
 } from '@cfnutil/core';
 import { EmptyBucketResource } from '@cfnutil/empty-bucket';
 import { PutObjectResource } from '@cfnutil/put-object';
-import { Metadata } from '@cfnutil/runtime';
 import { UnpackAssetResource } from '@cfnutil/unpack-asset';
 import {
   CloudFrontDistributionAttributes,
   CloudFrontDistributionLambdaFunctionAssociation,
   S3BucketAttributes,
 } from '@fmtk/cfntypes';
+import { ConfigFile } from './makeContentBucket';
 import { makeStaticWebAppFactory } from './makeStaticWebApp';
-
-export interface ConfigFile {
-  CacheControl?: string;
-  Contents: string;
-  ContentType?: string;
-  FileName: string;
-  Metadata?: Metadata;
-}
 
 export interface ReactAppProps {
   CertificateArn?: string;

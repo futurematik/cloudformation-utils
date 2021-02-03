@@ -1,9 +1,8 @@
+import { ChangeSetParameterMap, TemplateBuilder } from '@cfnutil/core';
 import { Command } from 'commander';
-import { TemplateBuilder } from '../template/TemplateBuilder';
-import { setParam } from './setParam';
-import { runChangesetCommand } from './changeset';
 import { runBuildCommand } from './build';
-import { ChangeSetParameterMap } from '../deploy/ChangeSetParameterMap';
+import { runChangesetCommand } from './changeset';
+import { setParam } from './setParam';
 
 export interface DeployCommandOptions {
   builder: (name: string) => TemplateBuilder;

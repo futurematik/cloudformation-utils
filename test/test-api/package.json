@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "yarn compile",
-    "bundle": "cfn-asset rollup --package-install-image node:alpine",
+    "bundle": "cfnutil asset rollup --package-install-image node:alpine",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx"
   },

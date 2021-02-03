@@ -1,8 +1,6 @@
-import path from 'path';
+import { buildStack, makeBuildReporter, TemplateBuilder } from '@cfnutil/core';
 import { Command } from 'commander';
-import { buildStack } from '../deploy/buildStack';
-import { makeBuildReporter } from '../display/makeBuildReporter';
-import { TemplateBuilder } from '../template/TemplateBuilder';
+import path from 'path';
 import { runUploadCommand } from './upload';
 
 export interface BuildCommandOptions {

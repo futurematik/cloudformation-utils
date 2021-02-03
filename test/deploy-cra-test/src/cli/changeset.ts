@@ -1,11 +1,11 @@
-import { Command } from 'commander';
 import {
   ChangeSetParameterFactory,
+  ChangeSetParameterMap,
   createChangeSet,
-} from '../deploy/createChangeSet';
-import { setParam } from './setParam';
+} from '@cfnutil/core';
+import { Command } from 'commander';
 import { runExecuteCommand } from './execute';
-import { ChangeSetParameterMap } from '../deploy/ChangeSetParameterMap';
+import { setParam } from './setParam';
 
 export interface ChangesetCommandOptions {
   defaultStackName?: string;

@@ -15,7 +15,7 @@ import {
 } from '@cfnutil/core';
 import { EmptyBucketResource } from '@cfnutil/empty-bucket';
 import { PutObjectResource } from '@cfnutil/put-object';
-import { Metadata, MetadataGlob } from '@cfnutil/runtime';
+import { MetadataGlob } from '@cfnutil/runtime';
 import { UnpackAssetResource } from '@cfnutil/unpack-asset';
 import {
   CloudFrontDistributionAttributes,
@@ -26,15 +26,7 @@ import {
 } from '@fmtk/cfntypes';
 import { makeCloudFrontAliasTarget } from '../util/makeCloudFrontAliasTarget';
 import { makeOaiArn } from '../util/makeOaiArn';
-import { makeContentBucketFactory } from './makeContentBucket';
-
-export interface ConfigFile {
-  CacheControl?: string;
-  Contents: string;
-  ContentType?: string;
-  FileName: string;
-  Metadata?: Metadata;
-}
+import { ConfigFile, makeContentBucketFactory } from './makeContentBucket';
 
 export interface StaticWebAppProps {
   CertificateArn?: string;

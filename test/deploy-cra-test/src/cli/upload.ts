@@ -1,6 +1,5 @@
+import { makeUploadReporter, uploadStack } from '@cfnutil/core';
 import { Command } from 'commander';
-import { uploadStack } from '../deploy/uploadStack';
-import { makeUploadReporter } from '../display/makeUploadReporter';
 
 export interface UploadOptions {
   bucket: string;

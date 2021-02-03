@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "bundle": "cfn-asset content --source build/",
+    "bundle": "cfnutil asset content --source build/",
     "eject": "react-scripts eject",
     "start": "react-scripts start",
     "test": "react-scripts test"

@@ -1,6 +1,5 @@
+import { executeChangeSet, makeChangeSetReporter } from '@cfnutil/core';
 import { Command } from 'commander';
-import { executeChangeSet } from '../deploy/executeChangeSet';
-import { makeChangeSetReporter } from '../display/makeChangeSetReporter';
 
 export interface ExecuteCommandOptions {
   defaultStackName?: string;

@@ -1,12 +1,12 @@
 import fs from 'fs';
-import path from 'path';
 import ignore from 'ignore';
+import path from 'path';
 import { ZipEntry } from './ZipEntry';
 
 export interface FolderEntriesOptions {
   archivePath?: string;
-  source: string;
   ignore?: string[];
+  source: string;
 }
 
 export async function* getFolderEntries({

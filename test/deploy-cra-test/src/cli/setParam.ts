@@ -1,7 +1,4 @@
-import {
-  ChangeSetParameterMap,
-  ChangeSetParameter,
-} from '../deploy/ChangeSetParameterMap';
+import { ChangeSetParameter, ChangeSetParameterMap } from '@cfnutil/core';
 
 export function setParam(
   assign: string,

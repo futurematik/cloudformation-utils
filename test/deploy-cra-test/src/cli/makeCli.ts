@@ -1,4 +1,4 @@
-import { TemplateBuilder } from '../template/TemplateBuilder';
+import { TemplateBuilder } from '@cfnutil/core';
 import { Command } from 'commander';
 import { makeBuildCommand } from './build';
 import { makeChangesetCommand } from './changeset';

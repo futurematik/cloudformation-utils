@@ -1,8 +1,7 @@
-import { rollup, InputOptions } from 'rollup';
-import { ZipEntry } from './ZipEntry';
+import { InputOptions, rollup } from 'rollup';
+import { ZipEntry } from '../zip/ZipEntry';
 
-// prevent build tooling recognizing the string (rollup source seems to do this)
-const SourceMapUrl = 'source_Mapping_URL'.replace(/_/g, '');
+const SourceMapUrl = 'sourceMappingURL';
 
 export async function* rollupPackageEntries(
   inputOptions: InputOptions,

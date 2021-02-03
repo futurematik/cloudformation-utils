@@ -1,8 +1,8 @@
-import fs from 'fs';
 import path from 'path';
-import { rollupPackage } from './rollupPackage';
-import { addBundleInfoToPackageJson } from './addBundleInfoToPackageJson';
-import { readDotIgnore } from './readDotIgnore';
+import { addBundleInfoToPackageJson } from '../util/addBundleInfoToPackageJson';
+import { readDotIgnoreForFolder } from '../util/readDotIgnoreForFolder';
+import { writeStreamToFile } from '../util/writeStreamToFile';
+import { makeRollupPackageStream } from './makeRollupPackageStream';
 
 export interface RollupPackageDirOptions {
   ignorePaths?: string[];
@@ -11,7 +11,6 @@ export interface RollupPackageDirOptions {
   packageInstallImage?: string;
   resolveRoot?: string;
   rollupConfigPath?: string;
-  smokeTest?: boolean;
 }
 
 export async function rollupPackageDir(
@@ -23,7 +22,7 @@ export async function rollupPackageDir(
   const installPackages = opts?.installPackages || [];
 
   const ignorePaths = opts?.ignorePaths || [];
-  ignorePaths.push(...(await readDotIgnore(dirname)));
+  ignorePaths.push(...(await readDotIgnoreForFolder(dirname)));
 
   const rollupConfigPath = opts?.rollupConfigPath || 'rollup.config.js';
 
@@ -37,17 +36,15 @@ export async function rollupPackageDir(
     installPackages.push(...rollupConfig.external);
   }
 
-  await fs.promises.mkdir(path.dirname(fullOutputPath), { recursive: true });
-
-  await rollupPackage({
+  const output = await makeRollupPackageStream({
     ignore: ignorePaths,
     inputOptions: rollupConfig.default,
     installPackages,
-    outputPath: fullOutputPath,
     packageInstallImage: opts?.packageInstallImage,
     resolveRoot: opts?.resolveRoot || dirname,
-    smokeTest: opts?.smokeTest,
   });
+
+  await writeStreamToFile(fullOutputPath, output, true);
 
   await addBundleInfoToPackageJson(dirname, {
     path: outputPath,

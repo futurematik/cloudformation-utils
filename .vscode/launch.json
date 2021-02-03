@@ -17,34 +17,20 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch cfn-asset",
+      "name": "Launch build",
+      "runtimeArgs": ["-r", "modenscript/register"],
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/packages/assets/cli/cfn-asset.js",
+      "program": "${workspaceFolder}/test/deploy-cra-test/src/index.ts",
       "outFiles": ["${workspaceFolder}/**/*.js"],
-      "args": ["rollup"],
-      "cwd": "${workspaceFolder}/test/test-api"
+      "args": ["build", "--stack-version", "latest"]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch build",
-      "runtimeArgs": ["-r", "esm"],
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/test/deploy-cra-test/lib/index.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"],
-      "args": [
-        "build",
-        "--stack-version",
-        "latest"
-      ],
-    }
-    {
-      "type": "node",
-      "request": "launch",
       "name": "Launch upload",
-      "runtimeArgs": ["-r", "esm"],
+      "runtimeArgs": ["-r", "modenscript/register"],
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/test/deploy-cra-test/lib/index.js",
+      "program": "${workspaceFolder}/test/deploy-cra-test/src/index.ts",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "args": [
         "build",

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import stream from 'stream';
-import { deferred } from './deferred';
+import { deferred } from '../internal/deferred';
 
 export class HashStream extends stream.Transform {
   private readonly hash: crypto.Hash;

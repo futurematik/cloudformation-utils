@@ -1,10 +1,10 @@
-import path from 'path';
-import fs from 'fs';
 import childProc from 'child_process';
+import fs from 'fs';
+import path from 'path';
 import tempy from 'tempy';
-import { ZipEntry } from './ZipEntry';
+import { findUpTree } from '../util/findUpTree';
 import { getFolderEntries } from './getFolderEntries';
-import { findUpTree } from './util/findUpTree';
+import { ZipEntry } from './ZipEntry';
 
 export interface PackageEntriesOptions {
   archivePath?: string;
@@ -14,7 +14,7 @@ export interface PackageEntriesOptions {
   resolveRoot?: string;
 }
 
-export async function* packageEntries({
+export async function* getPackageEntries({
   archivePath = 'node_modules',
   ignorePaths,
   packageInstallImage = 'node:lts-slim',

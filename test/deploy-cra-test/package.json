@@ -23,6 +23,6 @@
     "build": "yarn compile",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx",
-    "start": "node -r esm -r ts-node/register src/index.ts"
+    "start": "node -r modernscript/register src/index.ts"
   }
 }

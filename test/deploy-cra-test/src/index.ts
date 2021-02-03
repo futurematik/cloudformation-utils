@@ -1,5 +1,5 @@
 import { run } from '@fmtk/async-main';
-import { makeCli } from '@cfnutil/core';
+import { makeCli } from './cli/makeCli';
 import { makeStack } from './makeStack';
 
 async function main(args: string[]) {

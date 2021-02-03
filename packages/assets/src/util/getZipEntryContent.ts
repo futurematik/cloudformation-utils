@@ -1,4 +1,4 @@
-import { ZipEntry, EntryContent } from '../ZipEntry';
+import { EntryContent, ZipEntry } from '../zip/ZipEntry';
 
 export async function getZipEntryContent({
   content,

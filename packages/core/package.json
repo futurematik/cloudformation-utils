@@ -13,6 +13,7 @@
     "build": "yarn clean && yarn compile && yarn lint",
     "clean": "rm -rf lib/ dist/",
     "compile": "tsc",
+    "index": "node ../../makeIndex.js src/",
     "lint": "eslint src/ --ext=ts,tsx",
     "watch:compile": "node ../../tscWatch.js"
   },
@@ -27,13 +28,9 @@
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.705.0",
     "chalk": "^4.1.0",
-    "commander": "^5.1.0",
     "debug": "^4.1.1",
     "lodash.throttle": "^4.1.1",
-    "minimatch": "^3.0.4",
     "pretty-bytes": "^5.3.0",
-    "progress": "^2.0.3",
-    "tempy": "^0.5.0",
     "yaprog": "^0.4.2"
   }
 }

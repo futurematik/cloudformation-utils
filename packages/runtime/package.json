@@ -17,6 +17,7 @@
   "scripts": {
     "clean": "rimraf lib/ dist/",
     "compile": "tsc",
+    "index": "node ../../makeIndex.js src/",
     "lint": "eslint src/ --ext=ts,tsx"
   },
   "dependencies": {

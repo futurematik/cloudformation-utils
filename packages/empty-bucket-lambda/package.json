@@ -10,7 +10,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "bundle": "cfn-asset rollup --smoke-test",
+    "bundle": "cfnutil asset rollup",
     "clean": "rimraf lib/ dist/",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx"
