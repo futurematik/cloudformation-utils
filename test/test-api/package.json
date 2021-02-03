@@ -1,13 +1,13 @@
 {
   "name": "@cfnutil-test/test-api",
-  "version": "0.2.12",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "cat-me": "^1.0.3",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@cfnutil/assets": "^0.3.2"
+    "@cfnutil/assets": "^0.4.0"
   },
   "scripts": {
     "build": "yarn compile",

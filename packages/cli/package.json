@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/cli",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,
@@ -21,8 +21,8 @@
     "lint": "eslint src/ --ext=ts,tsx"
   },
   "dependencies": {
-    "@cfnutil/assets": "^0.3.2",
-    "@cfnutil/core": "^0.3.6",
+    "@cfnutil/assets": "^0.4.0",
+    "@cfnutil/core": "^0.4.0",
     "@fmtk/async-main": "^0.1.1",
     "archiver": "^4.0.1",
     "chalk": "^4.1.0",
