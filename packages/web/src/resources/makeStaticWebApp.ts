@@ -38,6 +38,7 @@ export interface StaticWebAppProps {
   HostedZoneId: string;
   LambdaFunctionAssociations?: CloudFrontDistributionLambdaFunctionAssociation[];
   Metadata?: MetadataGlob[];
+  MinimumProtocolVersion?: string;
   PriceClass?: string;
   Source: S3ObjectRef;
 }
@@ -162,6 +163,8 @@ export function makeStaticWebAppFactory(dep: {
             ViewerCertificate: {
               AcmCertificateArn: certificateArn,
               SslSupportMethod: 'sni-only',
+              MinimumProtocolVersion:
+                props.MinimumProtocolVersion ?? 'TLSv1.2_2019',
             },
           },
         },

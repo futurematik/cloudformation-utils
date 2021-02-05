@@ -22,6 +22,7 @@ export interface ReactAppProps {
   EnableIpv6?: boolean;
   HostedZoneId: string;
   LambdaFunctionAssociations?: CloudFrontDistributionLambdaFunctionAssociation[];
+  MinimumProtocolVersion?: string;
   PriceClass?: string;
   Source: S3ObjectRef;
 }
