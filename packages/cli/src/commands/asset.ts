@@ -9,6 +9,10 @@ export function addAssetCommand(program: Command): void {
   command
     .command('content')
     .description('package the given directory into a zip')
+    .option(
+      '--bundle-name <name>',
+      'give the bundle a name to support multiple bundles per package',
+    )
     .requiredOption(
       '-s, --source <path>',
       'the source directory (defaults to CWD)',
@@ -24,6 +28,7 @@ export function addAssetCommand(program: Command): void {
     .action(
       async (options): Promise<void> => {
         await zipDir(options.source, {
+          bundleName: options.bundleName,
           packagePath: await getPackagePath(options.source),
           outputPath: options.outputPath,
           ignorePaths: options.ignore,
@@ -34,6 +39,14 @@ export function addAssetCommand(program: Command): void {
   command
     .command('rollup')
     .description('bundle the given directory with Rollup')
+    .option(
+      '--bundle-name <name>',
+      'give the bundle a name to support multiple bundles per package',
+    )
+    .option(
+      '--entrypoint <path>',
+      'override the input config in the rollup file',
+    )
     .option(
       '-i, --install <pkg>',
       'a package to install (can be specified multiple times)',
@@ -64,6 +77,8 @@ export function addAssetCommand(program: Command): void {
     .action(
       async (options): Promise<void> => {
         await rollupPackageDir(options.source, {
+          bundleName: options.bundleName,
+          entrypoint: options.entrypoint,
           ignorePaths: options.ignore,
           installPackages: options.install,
           outputPath: options.outputPath,

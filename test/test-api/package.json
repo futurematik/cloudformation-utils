@@ -11,11 +11,16 @@
   },
   "scripts": {
     "build": "yarn compile",
-    "bundle": "cfnutil asset rollup --package-install-image node:alpine",
+    "bundle": "cfnutil asset rollup --package-install-image node:alpine --bundle-name=b1 -- asset rollup --package-install-image node:alpine --bundle-name=b2 --entrypoint=./lib/index2.js",
     "compile": "tsc",
     "lint": "eslint src/ --ext=ts,tsx"
   },
-  "bundle": {
-    "path": "dist/bundle.zip"
+  "bundles": {
+    "b1": {
+      "path": "dist/b1.zip"
+    },
+    "b2": {
+      "path": "dist/b2.zip"
+    }
   }
 }

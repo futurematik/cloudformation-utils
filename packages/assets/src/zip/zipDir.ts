@@ -6,6 +6,7 @@ import { getFolderEntries } from './getFolderEntries';
 import { makeZipPackageStream } from './makeZipPackageStream';
 
 export interface ZipDirOptions {
+  bundleName?: string;
   ignorePaths?: string[];
   outputPath?: string;
   packagePath?: string;
@@ -15,7 +16,8 @@ export async function zipDir(
   dirname: string,
   opts?: ZipDirOptions,
 ): Promise<void> {
-  const outputPath = opts?.outputPath || 'dist/bundle.zip';
+  const outputPath =
+    opts?.outputPath || `dist/${opts?.bundleName || 'bundle'}.zip`;
   const fullOutputPath = path.resolve(outputPath);
 
   const ignorePaths = opts?.ignorePaths || [];
@@ -31,6 +33,7 @@ export async function zipDir(
 
   if (opts?.packagePath) {
     await addBundleInfoToPackageJson(opts?.packagePath, {
+      name: opts?.bundleName,
       path: outputPath,
     });
   }

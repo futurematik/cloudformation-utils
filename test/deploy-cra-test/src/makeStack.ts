@@ -1,19 +1,20 @@
-import {
-  makeAssetFromPackage,
-  TemplateBuilder,
-  makeParameters,
-  makeAwsResource,
-  makePolicyDocument,
-  PolicyEffect,
-  LambdaRuntime,
-  makeTemplateBuilderWithOptionalResources,
-} from '@cfnutil/core';
-import { makeReactAppFactory } from '@cfnutil/web';
 import { makeAutoCertResource } from '@cfnutil/auto-cert';
+import {
+  LambdaRuntime,
+  makeAssetFromPackage,
+  makeAwsResource,
+  makeLambdaAssumeRolePolicyDocument,
+  makeParameters,
+  makePolicyDocument,
+  makeTemplateBuilderWithOptionalResources,
+  PolicyEffect,
+  TemplateBuilder,
+} from '@cfnutil/core';
 import { makeEmptyBucketResource } from '@cfnutil/empty-bucket';
 import { makePutObjectResource } from '@cfnutil/put-object';
-import { makeUnpackAssetResource } from '@cfnutil/unpack-asset';
 import { makeRegionalFunctionResource } from '@cfnutil/regional-function';
+import { makeUnpackAssetResource } from '@cfnutil/unpack-asset';
+import { makeReactAppFactory } from '@cfnutil/web';
 import { ResourceType } from '@fmtk/cfntypes';
 
 export function makeStack(name: string): TemplateBuilder {
@@ -105,6 +106,55 @@ exports.handler = (event, context, callback) => {
     ],
   });
 
+  const [apiAsset1Builder, apiAsset1] = makeAssetFromPackage(
+    `${name}ApiAsset1`,
+    '@cfnutil-test/test-api',
+    {
+      resolveRoot: __dirname,
+      name: 'b1',
+    },
+  );
+
+  const [apiAsset2Builder, apiAsset2] = makeAssetFromPackage(
+    `${name}ApiAsset2`,
+    '@cfnutil-test/test-api',
+    {
+      resolveRoot: __dirname,
+      name: 'b2',
+    },
+  );
+
+  const [lambdaRoleBuilder, lambdaRole] = makeAwsResource(
+    ResourceType.IAMRole,
+    `${name}Role`,
+    {
+      AssumeRolePolicyDocument: makeLambdaAssumeRolePolicyDocument(),
+      ManagedPolicyArns: [
+        'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+      ],
+    },
+  );
+
+  const [lambda1Builder] = makeAwsResource(
+    ResourceType.LambdaFunction,
+    `${name}ApiLambda1`,
+    {
+      Code: apiAsset1.ref,
+      Role: lambdaRole.ref,
+      Handler: 'index.handler',
+    },
+  );
+
+  const [lambda2Builder] = makeAwsResource(
+    ResourceType.LambdaFunction,
+    `${name}ApiLambda2`,
+    {
+      Code: apiAsset2.ref,
+      Role: lambdaRole.ref,
+      Handler: 'index.handler',
+    },
+  );
+
   return makeTemplateBuilderWithOptionalResources([
     autoCertBuilder,
     emptyBucketBuilder,
@@ -116,5 +166,10 @@ exports.handler = (event, context, callback) => {
     testFuncBuilder,
     appAssetBuilder,
     appBuilder,
+    lambdaRoleBuilder,
+    apiAsset1Builder,
+    lambda1Builder,
+    apiAsset2Builder,
+    lambda2Builder,
   ]);
 }

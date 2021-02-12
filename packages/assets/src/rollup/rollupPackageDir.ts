@@ -5,6 +5,8 @@ import { writeStreamToFile } from '../util/writeStreamToFile';
 import { makeRollupPackageStream } from './makeRollupPackageStream';
 
 export interface RollupPackageDirOptions {
+  bundleName?: string;
+  entrypoint?: string;
   ignorePaths?: string[];
   installPackages?: string[];
   outputPath?: string;
@@ -17,7 +19,8 @@ export async function rollupPackageDir(
   dirname: string,
   opts?: RollupPackageDirOptions,
 ): Promise<void> {
-  const outputPath = opts?.outputPath || 'dist/bundle.zip';
+  const outputPath =
+    opts?.outputPath || `dist/${opts?.bundleName || 'bundle'}.zip`;
   const fullOutputPath = path.resolve(outputPath);
   const installPackages = opts?.installPackages || [];
 
@@ -27,7 +30,15 @@ export async function rollupPackageDir(
   const rollupConfigPath = opts?.rollupConfigPath || 'rollup.config.js';
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const rollupConfig = require(path.resolve(dirname, rollupConfigPath));
+  let rollupConfig = require(path.resolve(dirname, rollupConfigPath));
+
+  if (rollupConfig?.__esModule) {
+    rollupConfig = rollupConfig.default;
+  }
+
+  if (opts?.entrypoint) {
+    rollupConfig.input = opts.entrypoint;
+  }
 
   if (
     Array.isArray(rollupConfig.external) &&
@@ -38,7 +49,7 @@ export async function rollupPackageDir(
 
   const output = await makeRollupPackageStream({
     ignore: ignorePaths,
-    inputOptions: rollupConfig.default,
+    inputOptions: rollupConfig,
     installPackages,
     packageInstallImage: opts?.packageInstallImage,
     resolveRoot: opts?.resolveRoot || dirname,
@@ -47,6 +58,7 @@ export async function rollupPackageDir(
   await writeStreamToFile(fullOutputPath, output, true);
 
   await addBundleInfoToPackageJson(dirname, {
+    name: opts?.bundleName,
     path: outputPath,
   });
 }
