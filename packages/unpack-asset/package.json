@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "lib/index.js",
   "files": [
     "lib/",
@@ -19,7 +19,7 @@
     "lint": "eslint src/ --ext=ts,tsx"
   },
   "dependencies": {
-    "@cfnutil/core": "^0.4.1",
+    "@cfnutil/core": "^0.4.2",
     "@cfnutil/unpack-asset-lambda": "^0.3.1",
     "@fmtk/cfntypes": "^0.11.1"
   }
