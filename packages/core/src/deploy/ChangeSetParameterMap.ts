@@ -18,7 +18,7 @@ export function convertParameters(
   for (const [key, value] of Object.entries(map)) {
     if (typeof value === 'string') {
       params.push({ ParameterKey: key, ParameterValue: value });
-    } else {
+    } else if (value !== undefined && value !== null) {
       params.push({ ParameterKey: key, ...value });
     }
   }

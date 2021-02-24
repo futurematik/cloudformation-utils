@@ -1,13 +1,16 @@
 import { CloudFormation } from 'aws-sdk';
-import { downloadManifest } from './downloadManifest';
 import {
   ChangeSetParameterMap,
   convertParameters,
 } from './ChangeSetParameterMap';
+import { downloadManifest } from './downloadManifest';
 import { getStackInfo } from './getStackInfo';
 
 export interface ChangeSetParameterFactory {
-  (existing: CloudFormation.Stack | undefined): ChangeSetParameterMap;
+  (
+    existing: CloudFormation.Stack | undefined,
+    params: Record<string, string | undefined>,
+  ): ChangeSetParameterMap;
 }
 
 export interface CreateChangeSetOptions {
@@ -30,14 +33,7 @@ export async function createChangeSet(
 
   const cfn = new CloudFormation({ region: options.region });
   const existing = await getStackInfo(options.stackName, cfn);
-
-  const params = options.parameters
-    ? convertParameters(
-        typeof options.parameters === 'function'
-          ? options.parameters(existing)
-          : options.parameters,
-      )
-    : [];
+  const params = getParameterArray(options.parameters ?? {}, existing);
 
   for (const [asset, parameter] of Object.entries(manifest.parameters)) {
     params.push({
@@ -60,4 +56,25 @@ export async function createChangeSet(
       TemplateURL: `https://${options.bucketName}.s3.amazonaws.com/${manifest.template}`,
     })
     .promise();
+}
+
+function getParameterArray(
+  factory: ChangeSetParameterMap | ChangeSetParameterFactory,
+  existing: CloudFormation.Stack | undefined,
+): CloudFormation.Parameter[] {
+  if (typeof factory !== 'function') {
+    return convertParameters(factory);
+  }
+
+  let paramMap: Record<string, string>;
+
+  if (!existing?.Parameters) {
+    paramMap = {};
+  } else {
+    paramMap = Object.fromEntries(
+      existing.Parameters.map((x) => [x.ParameterKey, x.ParameterValue]),
+    );
+  }
+
+  return convertParameters(factory(existing, paramMap));
 }
