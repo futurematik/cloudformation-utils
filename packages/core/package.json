@@ -1,6 +1,6 @@
 {
   "name": "@cfnutil/core",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Gordon Leigh <gordon.leigh@futurematik.co.uk>",
   "repository": "https://github.com/futurematik/cloudformation-utils",
   "private": false,
@@ -22,7 +22,7 @@
     "src/"
   ],
   "dependencies": {
-    "@cfnutil/assets": "^0.4.1",
+    "@cfnutil/assets": "^0.4.2",
     "@cfnutil/runtime": "^0.3.0",
     "@fmtk/cfntypes": "^0.11.1",
     "@fmtk/validation": "^3.5.3",

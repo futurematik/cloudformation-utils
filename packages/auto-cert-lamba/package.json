@@ -7,7 +7,7 @@
     "access": "public"
   },
   "license": "MIT",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "lib/index.js",
   "scripts": {
     "bundle": "cfnutil asset rollup",
@@ -21,7 +21,7 @@
     "dist/"
   ],
   "devDependencies": {
-    "@cfnutil/assets": "^0.4.1",
+    "@cfnutil/assets": "^0.4.2",
     "@cfnutil/runtime": "^0.3.0",
     "@fmtk/validation": "^3.5.3",
     "aws-sdk": "^2.697.0"
