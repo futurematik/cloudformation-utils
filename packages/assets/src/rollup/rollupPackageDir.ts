@@ -31,6 +31,7 @@ export async function rollupPackageDir(
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   let rollupConfig = require(path.resolve(dirname, rollupConfigPath));
+  const externals = rollupConfig?.external;
 
   if (rollupConfig?.__esModule) {
     rollupConfig = rollupConfig.default;
@@ -41,10 +42,10 @@ export async function rollupPackageDir(
   }
 
   if (
-    Array.isArray(rollupConfig.external) &&
-    rollupConfig.external.every((x: unknown) => typeof x === 'string')
+    Array.isArray(externals) &&
+    externals.every((x: unknown) => typeof x === 'string')
   ) {
-    installPackages.push(...rollupConfig.external);
+    installPackages.push(...externals);
   }
 
   const output = await makeRollupPackageStream({
