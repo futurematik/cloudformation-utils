@@ -1,15 +1,11 @@
-import fs from 'fs';
-import { HashStream } from './util/HashStream';
-import { ZipEntry } from './ZipEntry';
 import { makeZipPackageStream } from './makeZipPackageStream';
+import { writeStreamToFile } from './util/writeStreamToFile';
+import { ZipEntry } from './ZipEntry';
 
 export async function makeZipPackage(
   outputPath: string,
   entries: AsyncIterable<ZipEntry> | Iterable<ZipEntry>,
-): Promise<string> {
-  const outFile = fs.createWriteStream(outputPath);
+): Promise<void> {
   const zip = await makeZipPackageStream(entries);
-  const hash = new HashStream();
-  zip.pipe(hash).pipe(outFile);
-  return hash.digestFinal('hex');
+  await writeStreamToFile(outputPath, zip);
 }

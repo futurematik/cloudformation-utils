@@ -27,7 +27,7 @@ export async function rollupPackage({
   packageInstallImage,
   resolveRoot = process.cwd(),
   smokeTest,
-}: RollupPackageOptions): Promise<string> {
+}: RollupPackageOptions): Promise<void> {
   const entries: ZipEntry[] = [];
 
   for await (const entry of rollupPackageEntries(inputOptions)) {
@@ -48,7 +48,7 @@ export async function rollupPackage({
       entries.push(entry);
     }
   }
-  return makeZipPackage(outputPath, entries);
+  await makeZipPackage(outputPath, entries);
 }
 
 async function runSmokeTest(
